@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RESTO PILOT AI — WhatsApp Ordering Assistant for Restaurants</title>
+<meta name="description" content="RESTO PILOT AI turns your restaurant's WhatsApp into a 24/7 AI ordering assistant. Live menu, cart, delivery, pickup and real-time orders. €50/week, no commitment.">
+<meta name="theme-color" content="#14110E">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RESTO PILOT AI">
+<meta property="og:title" content="RESTO PILOT AI — WhatsApp Ordering Assistant for Restaurants">
+<meta property="og:description" content="Your restaurant takes orders on WhatsApp. Automatically. 24/7. €50/week, zero commission, no commitment.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23FF4A1C'/%3E%3Cg transform='translate(4 4)' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11h18'/%3E%3Cpath d='M12 3a8 8 0 0 1 8 8H4a8 8 0 0 1 8-8z'/%3E%3Cpath d='M5 15h14l-1 5H6z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"RESTO PILOT AI","applicationCategory":"BusinessApplication","operatingSystem":"Web, WhatsApp","description":"AI ordering assistant for restaurants, built on the official WhatsApp Business Cloud API.","offers":{"@type":"Offer","price":"50","priceCurrency":"EUR","description":"Per week, no commitment"}}
+</script>
+<style>
+:root{
+  --bg:#14110E;--bg2:#1D1914;--fg:#FFF8EC;--mut:#BDB2A1;--hair:rgba(255,246,230,.13);--glass:rgba(255,246,230,.04);
+  --ivory:#FBF6EC;--paper2:#F3EBDC;--card:#FFFDF8;--line:#E4D9C5;--ink:#14110E;--ember:#FF4A1C;--ember2:#FFB627;--tomato-d:#C4320B;--leaf:#25D366;--leaf-d:#0B7443;
+  --grad:linear-gradient(100deg,#FFB627 0%,#FF7A2E 50%,#FF4A1C 100%);
+  --chat:#0B141A;--chat-in:#202C33;--chat-out:#005C4B;--chat-bar:#1F2C34;
+  --serif:'Bricolage Grotesque','Arial Narrow',system-ui,sans-serif;
+  --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --gut:clamp(16px,4vw,48px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-padding-top:96px;-webkit-text-size-adjust:100%;overflow-x:clip;background:var(--bg)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-stopped{overflow:clip}
+body{font-family:var(--sans);font-size:17px;line-height:1.6;font-weight:400;color:var(--fg);background:var(--bg);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img,video{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+ul,ol{list-style:none}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+:focus-visible{outline:2px solid var(--ember2);outline-offset:3px;border-radius:6px}
+::selection{background:var(--ember);color:#160600}
+.skip{position:fixed;top:-60px;left:16px;z-index:300;background:var(--ivory);color:var(--ink);padding:10px 16px;border-radius:10px;font-weight:600}
+.skip:focus{top:12px}
+.grain{position:fixed;inset:0;z-index:150;pointer-events:none;opacity:.055;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.prog{position:fixed;top:0;left:0;right:0;height:2px;z-index:160;background:var(--grad);transform:scaleX(0);transform-origin:left}
+.wrap{width:min(1280px,100% - var(--gut)*2);margin-inline:auto}
+.sec{padding-block:clamp(96px,12vw,176px);position:relative}
+
+/* Preloader: pure CSS so it can never trap the page */
+.pre{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-content:center;justify-items:center;gap:18px;animation:preout .9s var(--ease) 1.05s forwards;pointer-events:none}
+.pre span{font-family:var(--serif);font-weight:800;font-size:clamp(34px,5vw,60px);letter-spacing:-.01em;animation:prein 1s var(--ease) both}
+.pre span em{color:var(--ember2)}
+.pre i{display:block;width:150px;height:1px;background:var(--hair);overflow:hidden;position:relative}
+.pre i::after{content:"";position:absolute;inset:0;background:var(--grad);transform-origin:left;animation:preline 1s var(--ease) both}
+@keyframes prein{from{opacity:0;transform:translateY(16px);filter:blur(8px)}}
+@keyframes preline{from{transform:scaleX(0)}}
+@keyframes preout{to{clip-path:inset(0 0 100% 0);visibility:hidden}}
+.pre{clip-path:inset(0)}
+
+/* Type */
+h1,h2{font-family:var(--serif);font-weight:800;letter-spacing:-.025em;line-height:1.03}
+h2{font-size:clamp(42px,6.4vw,96px)}
+h3{font-family:var(--sans);font-weight:500;font-size:clamp(20px,1.7vw,23px);line-height:1.2;letter-spacing:-.018em}
+h1 em,h2 em{font-style:normal;color:var(--ember)}
+em .sw>span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sw{display:inline-block;overflow:clip;padding:.04em .07em .14em;margin:-.04em -.07em -.14em;vertical-align:top}
+.sw>span{display:inline-block;will-change:transform}
+.js .rv .sw>span{transform:translateY(112%);transition:transform 1.15s var(--ease);transition-delay:calc(var(--i)*38ms + var(--d,0s))}
+.js .rv.show .sw>span{transform:none}
+.tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ember2);margin-bottom:26px}
+.tag::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--ember);box-shadow:0 0 12px var(--ember)}
+.lead{font-size:clamp(17px,1.45vw,20px);color:var(--mut);max-width:58ch;margin-top:24px}
+.head{max-width:1000px;margin-bottom:clamp(48px,6vw,88px)}
+
+/* Buttons */
+.btn{font-family:var(--sans);display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:14px 28px;border-radius:999px;font-weight:500;font-size:16px;letter-spacing:-.01em;white-space:nowrap;transition:background .35s,color .35s,box-shadow .35s,border-color .35s,transform .5s var(--ease)}
+.btn svg{transition:transform .4s var(--ease)}
+.btn:hover svg{transform:translateX(4px)}
+.btn:active{scale:.97}
+.btn-hot{background:var(--ivory);color:var(--ink);box-shadow:0 0 0 1px rgba(255,255,255,.2) inset}
+.btn-hot:hover{background:#FFD3A8;box-shadow:0 0 44px -6px rgba(255,122,61,.75)}
+.btn-line{border:1px solid rgba(245,238,226,.28);color:var(--fg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.btn-line:hover{background:rgba(245,238,226,.1);border-color:rgba(245,238,226,.5)}
+.btn-ink{background:var(--ink);color:var(--ivory)}
+.btn-ink:hover{background:#2a241d}
+
+/* Header */
+.hdr{position:fixed;inset:14px 0 auto;z-index:100;pointer-events:none;animation:hdrin 1s var(--ease) 1.5s both}
+@keyframes hdrin{from{opacity:0;transform:translateY(-16px)}}
+.hdr-in{pointer-events:auto;width:min(1280px,100% - 24px);margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 8px 8px 16px;border-radius:999px;border:1px solid transparent;transition:background .4s,border-color .4s,backdrop-filter .4s}
+.hdr.on .hdr-in{background:rgba(16,14,12,.8);border-color:var(--hair);backdrop-filter:blur(22px) saturate(1.5);-webkit-backdrop-filter:blur(22px) saturate(1.5)}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:16px;letter-spacing:-.01em;white-space:nowrap}
+.logo em{font-style:normal;color:var(--ember2)}
+.logo-mark{width:32px;height:32px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#2a0e00;font-size:18px;flex-shrink:0}
+.nav{display:flex;gap:2px}
+.nav a{padding:8px 13px;border-radius:999px;font-size:14.5px;color:rgba(245,238,226,.72);transition:color .25s,background .25s}
+.nav a:hover{color:var(--fg);background:rgba(245,238,226,.08)}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.lang{display:flex;padding:3px;border-radius:999px;background:rgba(245,238,226,.08)}
+.lang button{font-family:var(--mono);font-size:12.5px;padding:7px 10px;min-width:40px;min-height:36px;border-radius:999px;color:rgba(245,238,226,.7);transition:.25s}
+.lang button.on{background:var(--ivory);color:var(--ink)}
+.hdr .btn{min-height:44px;padding:9px 18px;font-size:14.5px}
+.burger{display:none;width:44px;height:44px;border-radius:50%;background:rgba(245,238,226,.08);place-items:center;font-size:21px}
+.mnav{position:fixed;inset:0;z-index:90;background:rgba(11,10,8,.97);padding:100px var(--gut) 32px;display:flex;flex-direction:column;visibility:hidden;opacity:0;transition:opacity .35s,visibility .35s;overflow:auto}
+.mnav.open{visibility:visible;opacity:1}
+.mnav a:not(.btn){font-family:var(--serif);font-weight:800;font-size:clamp(34px,10vw,46px);line-height:1.15;padding:10px 0;border-bottom:1px solid var(--hair);transform:translateY(16px);transition:transform .7s var(--ease)}
+.mnav.open a{transform:none}
+.mnav .btn{margin-top:28px}
+
+/* Hero */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;isolation:isolate}
+.hero-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3;transform:scale(calc(1.06 + var(--hp,0)*.14));filter:saturate(1.05) brightness(.82)}
+.embers{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.hero-sh{position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(11,10,8,.62) 0%,rgba(11,10,8,.28) 32%,rgba(11,10,8,.74) 66%,var(--bg) 100%),radial-gradient(70% 60% at 76% 62%,rgba(255,100,30,.2),transparent 70%)}
+.hero-in{padding:130px 0 clamp(26px,3.4vw,44px);opacity:calc(1 - var(--hp,0)*1.5);transform:translateY(calc(var(--hp,0)*-50px))}
+.badge{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;margin-bottom:24px;padding:7px 14px 7px 11px;border-radius:999px;border:1px solid var(--hair);background:rgba(11,10,8,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--leaf);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(61,220,132,.6)}70%,100%{box-shadow:0 0 0 9px rgba(61,220,132,0)}}
+.hero h1{font-size:clamp(44px,6.5vw,104px);line-height:1;max-width:14em;text-shadow:0 2px 40px rgba(0,0,0,.35)}
+.hero .sw>span{animation:wup 1.25s var(--ease) both;animation-delay:calc(1.15s + var(--i)*55ms)}
+@keyframes wup{from{transform:translateY(112%)}}
+.hero-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(24px,5vw,80px);align-items:end;margin-top:clamp(22px,2.6vw,36px)}
+.hero-sub{font-size:clamp(16px,1.3vw,18.5px);color:rgba(245,238,226,.8);max-width:62ch}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px}
+.rise{animation:rise 1.2s var(--ease) both;animation-delay:calc(1.55s + var(--r,0)*.1s)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(24px,3vw,40px);padding-top:18px;border-top:1px solid var(--hair)}
+.facts dt{font-family:var(--serif);font-weight:800;font-size:clamp(26px,2.5vw,36px);line-height:1.1;white-space:nowrap}
+.facts dd{font-size:14px;color:rgba(245,238,226,.66);line-height:1.3;margin-top:3px}
+
+/* Marquee */
+.mq-w{overflow-x:clip;border-block:1px solid var(--hair)}
+.mq{overflow:hidden;padding:20px 0;mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.mq-t{display:flex;width:max-content;animation:mq 46s linear infinite}
+.mq ul{display:flex;align-items:center;flex-shrink:0}
+.mq li{display:flex;align-items:center;gap:16px;font-family:var(--serif);font-weight:800;font-size:clamp(24px,2.5vw,34px);padding:0 30px;white-space:nowrap;color:rgba(245,238,226,.82)}
+.mq li svg{font-size:.72em;color:var(--ember2)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* Manifesto */
+#lit{font-size:clamp(36px,5.8vw,88px);line-height:1.06;max-width:17em}
+.lw{transition:color .45s}
+.js #lit .lw{color:rgba(245,238,226,.15)}
+.js #lit .lw.on{color:var(--fg)}
+.ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:clamp(48px,6vw,84px)}
+.led,.bx,.calc,.perk{position:relative;background:var(--glass);border:1px solid var(--hair);overflow:hidden}
+.led::before,.bx::before,.calc::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,140,70,.13),transparent 65%)}
+.led:hover::before,.bx:hover::before,.calc:hover::before{opacity:1}
+.led::after,.bx::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;opacity:0;transition:opacity .5s;background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(255,190,130,.75),transparent 70%);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor}
+.led:hover::after,.bx:hover::after{opacity:1}
+.led{display:grid;grid-template-columns:38px 1fr;gap:16px;padding:24px;border-radius:20px}
+.led i{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:17px}
+.led.bad i{background:rgba(255,122,61,.14);color:var(--ember2)}
+.led.good i{background:rgba(61,220,132,.15);color:var(--leaf)}
+.led b{display:block;font-weight:500;font-size:19px;line-height:1.25;letter-spacing:-.015em}
+.led span{display:block;margin-top:5px;font-size:16px;color:var(--mut)}
+
+/* Phone */
+.phone{position:relative;width:310px;height:640px;border-radius:50px;padding:9px;background:linear-gradient(145deg,#4c463e,#141210 34%,#26221d 68%,#57504a);box-shadow:0 0 0 1px rgba(255,255,255,.08),0 60px 120px -40px #000,0 0 120px -30px rgba(255,122,61,.4)}
+.screen{position:relative;height:100%;border-radius:42px;overflow:hidden;display:flex;flex-direction:column;background-color:var(--chat);background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1.4px);background-size:18px 18px;color:#e9edef}
+.screen::before{content:"";position:absolute;top:10px;left:50%;translate:-50% 0;width:88px;height:24px;border-radius:99px;background:#000;z-index:3}
+.wa-top{display:flex;align-items:center;gap:10px;padding:42px 14px 11px;background:var(--chat-bar)}
+.wa-av{width:38px;height:38px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:20px;color:#2a0e00;flex-shrink:0}
+.wa-top b{display:block;font-size:15px;font-weight:600;line-height:1.2}
+.wa-top small{font-size:12.5px;color:#9db0ba}
+.chat{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;padding:12px 10px;overflow:hidden}
+.bub{max-width:86%;padding:7px 11px;border-radius:12px;font-size:14px;line-height:1.38;animation:bub .45s var(--ease) both}
+.bub.in{align-self:flex-start;background:var(--chat-in);border-top-left-radius:3px}
+.bub.out{align-self:flex-end;background:var(--chat-out);border-top-right-radius:3px}
+.bub b{font-weight:600}
+.story .bub{display:none}.story .bub.on{display:block}
+@keyframes bub{from{opacity:0;transform:translateY(12px) scale(.96)}}
+.dots{display:inline-flex;gap:4px;padding:3px 0}
+.dots i{width:6px;height:6px;border-radius:50%;background:#8fa3ad;animation:dot 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dot{30%{transform:translateY(-4px);opacity:1}0%,60%,100%{opacity:.5}}
+.wa-in{display:flex;gap:7px;align-items:center;padding:8px 10px 16px;background:var(--chat-bar)}
+.wa-in span{flex:1;height:36px;border-radius:99px;background:#2a3942;padding:0 14px;font-size:14px;line-height:36px;color:#9db0ba}
+.wa-in i{width:36px;height:36px;border-radius:50%;background:#25D366;color:#04331c;display:grid;place-items:center;font-size:16px}
+
+/* Printer + tickets */
+.printer{width:268px;filter:drop-shadow(0 34px 34px rgba(0,0,0,.65))}
+.printer-top{position:relative;z-index:2;height:36px;border-radius:12px 12px 5px 5px;background:linear-gradient(#3a342d,#1c1915);box-shadow:inset 0 1px 0 rgba(255,255,255,.16);display:flex;align-items:center;justify-content:space-between;padding:0 13px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--mut)}
+.printer-top i{width:7px;height:7px;border-radius:50%;background:var(--leaf);box-shadow:0 0 9px var(--leaf)}
+.zig{--s:7px;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/calc(2*var(--s)) 100%;-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/calc(2*var(--s)) 100%}
+.paper{margin:-3px 11px 0;background:#FFFDF6;color:#1b1712;font-family:var(--mono);font-size:13px;line-height:1.4;padding:10px 14px 20px;min-height:24px}
+.pl{display:none;grid-template-rows:0fr;animation:pl .5s var(--ease) forwards}
+.pl.on{display:grid}
+.pl>div{overflow:hidden;min-height:0;display:flex;justify-content:space-between;gap:10px}
+@keyframes pl{to{grid-template-rows:1fr}}
+.pl.c>div{justify-content:center;text-align:center}
+.pl.h>div{font-weight:600;font-size:15px}
+.pl.s>div{color:#6a6155;font-size:12px}
+.pl.r>div{border-top:1.5px dashed #bfb5a4;margin-top:8px;padding-top:8px}
+.pl.t>div{font-weight:600;font-size:17px}
+.stamp{display:none;width:fit-content;margin:12px auto 2px;font-family:var(--sans);font-weight:700;font-size:16px;letter-spacing:.06em;color:var(--leaf-d);border:2.5px solid var(--leaf-d);border-radius:6px;padding:1px 9px;transform:rotate(-8deg)}
+.stamp.on{display:block;animation:stamp .4s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes stamp{from{transform:rotate(-8deg) scale(2.2);opacity:0}}
+
+/* Scroll story */
+.story{position:relative;height:560vh}
+.story-in{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
+.story-in::before{content:"";position:absolute;inset:0;background:radial-gradient(46% 62% at 50% 54%,rgba(255,110,40,.2),transparent 72%)}
+.story-g{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 310px minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.story-l h2{font-size:clamp(34px,3.7vw,56px)}
+.scenes{margin-top:24px}
+.scenes li{border-top:1px solid var(--hair);padding:12px 0;opacity:.42;transition:opacity .5s}
+.scenes li.on{opacity:1}
+.scenes small{display:none}
+.scenes b{display:block;font-weight:500;font-size:18px;letter-spacing:-.015em;line-height:1.3}
+.scenes .x{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.scenes li.on .x{grid-template-rows:1fr}
+.scenes .x>div{overflow:hidden;min-height:0}
+.scenes p{font-size:15.5px;line-height:1.45;color:var(--mut);padding-top:4px}
+.story .phone{height:min(640px,calc(100svh - 120px));margin-top:32px;transform:scale(calc(.94 + var(--sp,0)*.06))}
+.story-r{display:flex;justify-content:center;align-self:start;padding-top:clamp(40px,12vh,120px);opacity:.4;transition:opacity .6s}
+.story.k .story-r{opacity:1}
+.story .printer{transform:rotate(1.4deg)}
+
+/* Video band */
+.band{position:relative;height:210vh}
+.band-in{position:sticky;top:0;height:100vh;height:100svh;display:grid;place-items:center;overflow:hidden}
+.band-m{position:absolute;inset:0;clip-path:inset(calc(var(--c,1)*20%) calc(var(--c,1)*26%) round calc(var(--c,1)*32px));background:#1a1510}
+.band-m video{width:100%;height:100%;object-fit:cover;transform:scale(calc(1.02 + var(--c,1)*.2))}
+.band-sh{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,8,.45),rgba(11,10,8,.18) 40%,rgba(11,10,8,.72))}
+.band-t{position:absolute;left:0;right:0;bottom:clamp(36px,8vh,84px);text-align:center;padding-inline:var(--gut);opacity:calc(1 - var(--c,1)*1.7);transform:translateY(calc(var(--c,1)*36px))}
+.band-t h2{font-size:clamp(46px,8.6vw,136px);text-shadow:0 4px 50px rgba(0,0,0,.45)}
+.band-t p{font-size:clamp(17px,1.5vw,21px);margin-top:10px}
+
+/* Demo */
+.demo{overflow:hidden}
+.demo::before{content:"";position:absolute;inset:0;background:radial-gradient(44% 40% at 84% 58%,rgba(61,220,132,.09),transparent 72%),radial-gradient(44% 40% at 10% 76%,rgba(255,122,61,.11),transparent 72%)}
+.demo .wrap{position:relative}
+.demo-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:clamp(24px,4vw,56px);align-items:stretch}
+.ctl{display:grid;grid-template-rows:auto 1fr;border-radius:26px;background:rgba(20,18,15,.78);border:1px solid var(--hair);overflow:hidden;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.ctl-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 22px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:12.5px;color:var(--mut)}
+.ctl-bar b{color:var(--fg);font-weight:500}
+.live{display:inline-flex;align-items:center;gap:7px;color:var(--leaf)}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--leaf);animation:pulse 2.2s infinite}
+.ctl-body{display:grid;grid-template-columns:1.1fr .9fr}
+.ctl-col{padding:24px 22px;display:flex;flex-direction:column}
+.ctl-col+.ctl-col{border-left:1px solid var(--hair)}
+.ctl h3{margin-bottom:14px}
+.rowc{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 0;border-top:1px solid var(--hair)}
+.rowc:last-of-type{border-bottom:1px solid var(--hair);margin-bottom:18px}
+.rowc b{display:block;font-weight:500;line-height:1.25}
+.rowc small{display:block;font-size:14px;color:var(--mut);line-height:1.3}
+.step{display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;background:rgba(245,238,226,.07);flex-shrink:0}
+.step button{width:40px;height:40px;border-radius:50%;font-size:19px;background:rgba(245,238,226,.09);transition:.2s}
+.step button:hover{background:var(--ivory);color:var(--ink)}
+.step output{min-width:72px;text-align:center;font-family:var(--mono);font-weight:500;font-size:15.5px}
+.step output.bump{animation:bump .5s var(--ease)}
+@keyframes bump{40%{transform:scale(1.22);color:var(--ember2)}}
+.sw-t,.sw[role=switch]{position:relative;width:54px;height:32px;border-radius:99px;background:rgba(245,238,226,.16);flex-shrink:0;transition:background .3s;overflow:visible;padding:0;margin:0;vertical-align:baseline}
+.sw[role=switch]::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .35s var(--ease)}
+.sw[role=switch][aria-checked=true]{background:#17A85B}
+.sw[role=switch][aria-checked=true]::after{transform:translateX(22px)}
+.hint{display:flex;gap:10px;margin-top:auto;padding:13px 15px;border-radius:14px;background:rgba(255,183,122,.1);border:1px solid rgba(255,183,122,.22);font-size:15px;line-height:1.4;color:#FFDDBB}
+.hint svg{font-size:18px;margin-top:2px}
+#dOrders{flex:1;display:flex;flex-direction:column}
+.oempty{flex:1;display:grid;place-items:center;font-size:15px;color:var(--mut);border:1px dashed var(--hair);border-radius:14px;padding:18px 14px;text-align:center}
+.oc{padding:15px;border-radius:14px;background:rgba(245,238,226,.05);border:1px solid var(--hair);animation:bub .5s var(--ease)}
+.oc header{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--mono);font-weight:500;font-size:14px}
+.oc p{font-size:15px;line-height:1.35;color:var(--mut);margin:6px 0 11px}
+.st{display:inline-block;padding:3px 9px;border-radius:99px;font-family:var(--mono);font-size:12px;white-space:nowrap}
+.st0{background:rgba(255,122,61,.18);color:var(--ember2)}.st1{background:rgba(255,205,90,.16);color:#FFD97A}.st2{background:rgba(61,220,132,.16);color:#7CEBAE}.st3{background:rgba(245,238,226,.1);color:var(--mut)}
+.oc .btn{width:100%;min-height:44px;padding:8px 12px;font-size:15px;background:var(--ivory);color:var(--ink)}
+.dphone{height:620px;width:100%;max-width:340px;justify-self:center}
+.dphone .chat{justify-content:flex-start;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
+.dphone .chat::-webkit-scrollbar{display:none}
+.dphone .chat>:first-child{margin-top:auto}
+.note{align-self:center;text-align:center;max-width:92%;padding:4px 11px;border-radius:9px;font-size:13px;line-height:1.35;background:#1d2d35;color:#ffd279;animation:bub .35s var(--ease) both}
+.chips{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;min-height:62px;align-content:center;padding:8px 10px 12px;background:var(--chat-bar);border-top:1px solid rgba(255,255,255,.06)}
+.chip{min-height:40px;padding:6px 13px;border-radius:99px;font-size:14px;font-weight:500;color:#a9f5c6;border:1px solid rgba(61,220,132,.5);background:rgba(61,220,132,.1);animation:bub .3s var(--ease) both;transition:background .2s}
+.chip:hover{background:rgba(61,220,132,.26)}
+.chips .wait{font-size:14px;color:#9db0ba;align-self:center;margin-right:auto}
+
+/* Bento */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.bx{grid-column:span 4;display:flex;flex-direction:column;justify-content:space-between;gap:24px;min-height:330px;padding:28px;border-radius:24px;transition:transform .7s var(--ease),border-color .4s}
+.bx:hover{transform:translateY(-4px)}
+.bx.w5{grid-column:span 5}.bx.w3{grid-column:span 3}
+.bx p{font-size:15.5px;line-height:1.5;color:var(--mut);margin-top:8px}
+.viz{flex:1;display:flex;flex-direction:column;justify-content:center;gap:9px;min-height:100px}
+.mini{display:inline-block;align-self:flex-start;padding:8px 12px;border-radius:12px;font-size:15px;line-height:1.35}
+.mini.o{align-self:flex-end;background:var(--chat-out);color:#e9edef;border-top-right-radius:3px}
+.parsed{display:flex;flex-wrap:wrap;gap:6px}
+.parsed span{font-family:var(--mono);font-size:12.5px;padding:4px 9px;border-radius:7px;background:rgba(255,183,122,.1);border:1px solid rgba(255,183,122,.2);color:var(--ember2)}
+.js .bx .parsed span{opacity:0;transform:translateY(8px);transition:.7s var(--ease)}
+.js .bx.show .parsed span{opacity:1;transform:none}
+.bx.show .parsed span:nth-child(1){transition-delay:.5s}.bx.show .parsed span:nth-child(2){transition-delay:.68s}.bx.show .parsed span:nth-child(3){transition-delay:.86s}
+.big-price{font-family:var(--serif);font-weight:800;font-size:clamp(60px,6.4vw,88px);line-height:1;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.big-price span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.big-price s{font-size:.5em;opacity:.45;text-decoration-thickness:2px}
+.opts{display:flex;flex-wrap:wrap;gap:7px}
+.opts span{padding:6px 12px;border-radius:99px;border:1px solid var(--hair);font-size:14.5px}
+.opts span.on{background:var(--ivory);border-color:var(--ivory);color:var(--ink)}
+.opts em{font-style:normal;font-family:var(--mono);font-size:12.5px;opacity:.7;margin-left:5px}
+.sum{font-family:var(--mono);font-size:13.5px;line-height:1.8;color:rgba(245,238,226,.86)}
+.sum div{display:flex;justify-content:space-between;gap:10px}
+.sum .tt{border-top:1px dashed var(--hair);margin-top:6px;padding-top:6px;font-weight:500;font-size:16px;color:var(--fg)}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:99px;background:rgba(245,238,226,.07)}
+.seg span{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;border-radius:99px;font-size:15px;color:var(--mut)}
+.seg .on{background:var(--ivory);color:var(--ink);font-weight:500}
+.seg .on span{color:inherit;padding:0}
+.seg-n{font-family:var(--mono);font-size:12.5px!important;margin-top:0!important}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:92px}
+.week span{display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:6px;font-family:var(--mono);font-size:12px;text-align:center;color:var(--mut)}
+.week b{font-weight:400}
+.week i{display:block;margin-top:auto;border-radius:4px;background:linear-gradient(180deg,#FFB77A,rgba(255,122,61,.35));height:calc(var(--h) * .74);transform-origin:bottom}
+.week .off i{background:repeating-linear-gradient(45deg,var(--hair) 0 3px,transparent 3px 7px);height:74%}
+.js .bx .week i,.js .bx .bars i{transform:scaleY(0);transition:transform 1.1s var(--ease)}
+.js .bx.show .week i,.js .bx.show .bars i{transform:none}
+.week span:nth-child(n) i,.bars i{transition-delay:calc(var(--k,0)*50ms + .3s)!important}
+.toast{display:flex;gap:11px;align-items:center;padding:11px 13px;border-radius:15px;background:rgba(245,238,226,.06);border:1px solid var(--hair)}
+.toast i{width:34px;height:34px;border-radius:50%;background:var(--grad);color:#2a0e00;display:grid;place-items:center;font-size:16px;flex-shrink:0;animation:ring 3s infinite}
+@keyframes ring{0%,88%,100%{transform:none}91%{transform:rotate(-12deg)}94%{transform:rotate(12deg)}97%{transform:rotate(-6deg)}}
+.toast b{display:block;font-size:15px;font-weight:500;line-height:1.25}
+.toast small{font-size:14px;color:var(--mut)}
+.bars{display:flex;align-items:flex-end;gap:5px;height:92px}
+.bars i{flex:1;border-radius:3px 3px 0 0;background:rgba(245,238,226,.13);height:var(--h);transform-origin:bottom}
+.bars i.pk{background:linear-gradient(180deg,#FFB77A,#FF7A3D)}
+.conn{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;border-radius:14px;background:rgba(245,238,226,.05);border:1px solid var(--hair);font-family:var(--mono);font-size:13.5px}
+.conn b{font-weight:400}
+.conn span{display:inline-flex;align-items:center;gap:6px;color:var(--leaf)}
+
+/* Ivory section */
+.alt{background:var(--ivory);color:var(--ink);--mut:#62594C;--hair:rgba(11,10,8,.13)}
+.alt .tag{color:#B5430F}
+.alt .tag::before{background:#D3531A;box-shadow:none}
+.alt h2 em,.alt em .sw>span{color:#B5430F;background:none;-webkit-text-fill-color:currentColor}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.sp-b::before{counter-increment:s;content:counter(s);display:block;font-family:var(--serif);font-weight:800;font-size:46px;line-height:1;color:#B5430F;margin-bottom:12px}
+.sp{display:flex;flex-direction:column;border-radius:24px;background:#FFFCF5;border:1px solid var(--hair);overflow:hidden;transition:transform .7s var(--ease)}
+.sp:hover{transform:translateY(-5px)}
+.sp-v{height:232px;padding:22px;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;justify-content:center;gap:9px;background-image:radial-gradient(70% 90% at 80% 0%,rgba(255,122,61,.2),transparent 70%)}
+.fld{padding:10px 14px;border-radius:12px;background:rgba(245,238,226,.07);font-size:15px}
+.fld small{display:block;font-family:var(--mono);font-size:11.5px;color:#A99F90;line-height:1.4}
+.fake-btn{padding:10px;border-radius:99px;background:var(--ivory);color:var(--ink);font-weight:500;text-align:center}
+.fake-btn.g{background:#25D366;color:#04331c;display:flex;justify-content:center;align-items:center;gap:8px}
+.mrow{display:flex;justify-content:space-between;gap:12px;padding:9px 14px;border-radius:12px;background:rgba(245,238,226,.07);font-size:15px}
+.mrow em{font-style:normal;font-family:var(--mono);font-size:13.5px;color:var(--ember2)}
+.sp-b{padding:24px 26px 28px}
+.sp-b p{font-size:16px;line-height:1.5;color:var(--mut);margin-top:8px}
+
+/* Dashboard */
+.app-p{perspective:1600px}
+.app{border-radius:22px;background:#131110;border:1px solid var(--hair);overflow:hidden;box-shadow:0 70px 140px -60px #000,0 0 140px -50px rgba(255,122,61,.35);transform-origin:50% 0;will-change:transform}
+.app-bar{display:flex;align-items:center;gap:7px;padding:13px 16px;border-bottom:1px solid var(--hair)}
+.app-bar i{width:10px;height:10px;border-radius:50%;background:rgba(245,238,226,.18)}
+.app-bar span{margin-left:10px;font-family:var(--mono);font-size:12.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-bar em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--mut);padding:2px 8px;border-radius:6px;border:1px solid var(--hair);white-space:nowrap}
+.app-b{display:grid;grid-template-columns:204px minmax(0,1fr)}
+.side{border-right:1px solid var(--hair);color:var(--mut);padding:14px 10px}
+.side a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;font-size:14.5px;margin-bottom:2px}
+.side a svg{font-size:17px}
+.side a.on{background:rgba(245,238,226,.08);color:var(--fg)}
+.app-m{padding:20px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.kpi{padding:13px 15px;border-radius:14px;border:1px solid var(--hair)}
+.kpi small{display:block;font-size:13.5px;color:var(--mut);line-height:1.3}
+.kpi b{font-family:var(--serif);font-weight:800;font-size:clamp(28px,2.8vw,38px);line-height:1.2}
+.rail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.lane{height:286px;overflow:hidden;padding:10px;border-radius:14px;background:rgba(245,238,226,.04)}
+.lane h4{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12.5px;font-weight:500;padding:3px 4px 10px}
+.lane h4 span{opacity:.55}
+.tk{padding:10px 11px 14px;margin-bottom:8px;background:#FFFDF6;color:#1b1712;font-family:var(--mono);font-size:12.5px;line-height:1.35;--s:5px}
+.tk b{display:flex;justify-content:space-between;gap:6px;font-size:13.5px;font-weight:600}
+.tk span{display:block;color:#5e564a}
+.tk b span{color:inherit}
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,40px);margin-top:56px}
+.ft svg{font-size:23px;color:var(--ember2);margin-bottom:12px}
+.ft b{display:block;font-weight:500;font-size:18.5px;line-height:1.25;letter-spacing:-.015em}
+.ft span{display:block;margin-top:5px;font-size:15.5px;line-height:1.45;color:var(--mut)}
+
+/* AI */
+.ai{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,6vw,88px);align-items:center}
+.ail{margin-top:34px;border-top:1px solid var(--hair)}
+.ail li{display:grid;grid-template-columns:40px 1fr;gap:16px;padding:17px 0;border-bottom:1px solid var(--hair)}
+.ail i{width:40px;height:40px;border-radius:50%;border:1px solid var(--hair);color:var(--ember2);display:grid;place-items:center;font-size:18px}
+.ail b{display:block;font-weight:500;font-size:18.5px;line-height:1.25;letter-spacing:-.015em}
+.ail p{font-size:15.5px;line-height:1.45;color:var(--mut);margin-top:3px}
+.ai-v{position:relative;height:min(700px,120vw)}
+.photo{position:relative;height:100%;border-radius:28px;overflow:hidden;background:#1a1510}
+.photo video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.flt{position:absolute;display:flex;gap:11px;align-items:center;padding:12px 16px;border-radius:16px;background:rgba(20,18,15,.72);border:1px solid var(--hair);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);animation:bob 7s ease-in-out infinite}
+.flt i{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.flt b{display:block;font-weight:500;font-size:15.5px;line-height:1.25}
+.flt small{font-size:13.5px;color:var(--mut);line-height:1.2}
+.flt.a{top:28px;left:-18px}.flt.a i{background:rgba(61,220,132,.18);color:var(--leaf)}
+.flt.b{bottom:34px;right:-14px;animation-delay:-3.5s}.flt.b i{background:rgba(255,183,122,.16);color:var(--ember2)}
+@keyframes bob{50%{transform:translateY(-10px)}}
+
+/* Pricing */
+.price-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:clamp(28px,5vw,72px);align-items:start}
+.rcpt-w{filter:drop-shadow(0 40px 50px rgba(0,0,0,.7));transform:rotate(-1deg);max-width:520px;width:100%;justify-self:center;transition:transform .8s var(--ease)}
+.rcpt-w:hover{transform:none}
+.js .rcpt-w .rcpt{clip-path:inset(0 0 100% 0);transition:clip-path 2s var(--ease) .15s}
+.js .rcpt-w.show .rcpt{clip-path:inset(0)}
+.rcpt{--s:10px;background:#FFFDF6;color:#1b1712;padding:34px clamp(20px,3vw,34px) 46px;font-family:var(--mono);font-size:14px;line-height:1.45}
+.rcpt-h{text-align:center;padding-bottom:16px;border-bottom:1.5px dashed #bfb5a4;margin-bottom:12px}
+.rcpt-h b{display:block;font-family:var(--serif);font-weight:800;font-size:32px;line-height:1.1}
+.rcpt-h span{font-size:13px;color:#6a6155}
+.rl{display:flex;align-items:baseline;gap:8px;padding:5px 0}
+.rl span:first-child{min-width:0}
+.rl::after{content:"";order:1;flex:1;border-bottom:1.5px dotted #bfb5a4;min-width:14px;transform:translateY(-4px)}
+.rl span:last-child{order:2;font-weight:500;white-space:nowrap}
+.rl.z span:last-child{color:var(--leaf-d)}
+.rcpt hr{border:0;border-top:1.5px dashed #bfb5a4;margin:10px 0}
+.rtot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding:10px 0 4px}
+.rtot span{font-weight:500;font-size:16px;padding-bottom:10px}
+.rtot b{font-family:var(--serif);font-weight:800;font-size:clamp(68px,8vw,96px);line-height:.95;white-space:nowrap}
+.rtot small{font-family:var(--mono);font-size:15px}
+.rsub{font-size:13px;color:#6a6155;text-align:center;margin:10px 0 18px}
+.rcpt .btn{width:100%;white-space:normal;text-align:center}
+.calc{border-radius:24px;padding:clamp(22px,3vw,34px)}
+.calc h3{font-family:var(--serif);font-weight:800;font-size:clamp(30px,3vw,42px);letter-spacing:-.015em;line-height:1.08}
+.calc>p{font-size:16px;color:var(--mut);margin-top:8px}
+.rg{margin-top:20px;position:relative}
+.rg label{display:flex;justify-content:space-between;gap:12px;font-size:16px;margin-bottom:4px}
+.rg output{font-family:var(--mono);color:var(--ember2);white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;background:transparent;cursor:pointer;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:3px;border-radius:9px;background:linear-gradient(90deg,var(--ember2) var(--p),rgba(245,238,226,.15) var(--p))}
+input[type=range]::-moz-range-track{height:3px;border-radius:9px;background:rgba(245,238,226,.15)}
+input[type=range]::-moz-range-progress{height:3px;border-radius:9px;background:var(--ember2)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-10.5px;border-radius:50%;background:var(--ivory);box-shadow:0 0 0 5px rgba(255,183,122,.2)}
+input[type=range]::-moz-range-thumb{width:24px;height:24px;border:0;border-radius:50%;background:var(--ivory);box-shadow:0 0 0 5px rgba(255,183,122,.2)}
+.cmp{margin-top:26px;display:grid;gap:12px}
+.cmp div>span{display:flex;justify-content:space-between;gap:12px;font-size:15px;margin-bottom:6px;color:var(--mut)}
+.cmp div>span b{font-family:var(--mono);font-weight:500;color:var(--fg)}
+.cmp i{display:block;height:6px;border-radius:9px;transition:width .6s var(--ease);min-width:6px}
+.cmp .a i{background:rgba(245,238,226,.28)}.cmp .b i{background:var(--leaf)}
+.save{margin-top:24px;padding-top:18px;border-top:1px solid var(--hair)}
+.save small{font-size:16px;color:var(--mut)}
+.save b{display:block;font-family:var(--serif);font-weight:800;font-size:clamp(56px,7.4vw,96px);line-height:1.05;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.fine{display:block;font-size:14px!important;line-height:1.4;margin-top:10px}
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.perk{padding:20px 22px;border-radius:18px}
+.perk b{display:block;font-weight:500;font-size:18px;line-height:1.25;margin-bottom:4px}
+.perk span{font-size:15px;line-height:1.4;color:var(--mut);display:block}
+
+/* FAQ */
+.faq{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(28px,5vw,72px);align-items:start}
+.faq-h{position:sticky;top:110px}
+.faq-h h2{font-size:clamp(42px,5vw,76px)}
+.q{border-bottom:1px solid var(--hair)}
+.q:first-child{border-top:1px solid var(--hair)}
+.q h3{font:inherit;letter-spacing:inherit}
+.q button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:44px;padding:22px 0;text-align:left;font-weight:400;font-size:clamp(19px,1.6vw,22px);line-height:1.25;letter-spacing:-.015em;transition:color .3s}
+.q button:hover{color:var(--ember2)}
+.q .pm{width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);display:grid;place-items:center;font-size:16px;flex-shrink:0;transition:transform .5s var(--ease),background .3s,color .3s}
+.q.open .pm{transform:rotate(45deg);background:var(--ivory);color:var(--ink)}
+.q .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+.q.open .a{grid-template-rows:1fr}
+.q .a>div{overflow:hidden;min-height:0;visibility:hidden;transition:visibility .55s}
+.q.open .a>div{visibility:visible}
+.q .a p{padding:0 50px 24px 0;color:var(--mut)}
+
+/* CTA */
+.cta{position:relative;overflow:hidden;isolation:isolate;min-height:100svh;display:flex;align-items:center;text-align:center}
+.cta video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3}
+.cta-sh{position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,var(--bg) 0%,rgba(11,10,8,.66) 26%,rgba(11,10,8,.62) 74%,var(--bg) 100%)}
+.cta-in{padding-block:120px}
+.cta h2{font-size:clamp(46px,8.2vw,132px);line-height:1}
+.cta p{font-size:clamp(17px,1.6vw,21px);max-width:50ch;margin:24px auto 32px;color:rgba(245,238,226,.84)}
+.cta .btn{white-space:normal}
+
+/* Footer */
+.ft-w{padding:72px 0 26px;overflow:hidden;border-top:1px solid var(--hair)}
+.f-g{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:48px}
+.f-g p{font-size:16px;line-height:1.5;color:var(--mut);max-width:36ch;margin-top:14px}
+.f-g h4{font-family:var(--mono);font-size:12.5px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.f-g a.fl{display:block;width:fit-content;padding:5px 0;font-size:16px;transition:color .25s}
+.f-g a.fl:hover{color:var(--ember2)}
+.wordmark{font-family:var(--serif);font-weight:800;font-size:clamp(44px,12.6vw,200px);line-height:1;letter-spacing:-.02em;white-space:nowrap;text-align:center;user-select:none;background:linear-gradient(180deg,rgba(245,238,226,.34),rgba(245,238,226,.03));-webkit-background-clip:text;background-clip:text;color:transparent}
+.f-b{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;padding-top:20px;margin-top:18px;border-top:1px solid var(--hair);font-size:14px;color:var(--mut)}
+
+/* Reveal */
+.js .rv{opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.1s var(--ease),transform 1.2s var(--ease),filter 1.1s var(--ease);transition-delay:var(--d,0s)}
+.js .rv.show{opacity:1;transform:none;filter:none}
+.js .head.rv,.js .faq-h.rv,.js .cta-in.rv{transform:none;filter:none}
+
+.js .rcpt-w.rv,.js .rcpt-w.rv.show{opacity:1;filter:drop-shadow(0 40px 50px rgba(0,0,0,.7));transform:rotate(-1deg)}
+.js .rcpt-w.rv.show:hover{transform:none}
+
+
+/* ===== Classic theme: bold type, cream / tomato / saffron / ink ===== */
+.alt,.alt2,.ctl,.flt{--fg:#14110E;--mut:#675E51;--hair:#E4D9C5;--glass:#FFFDF8;--ember2:#C4320B}
+.alt{background:var(--ivory);color:var(--fg)}
+.alt2{background:var(--paper2);color:var(--fg)}
+.bx.k,.led.good,.sp-v,.side{--fg:#FFF8EC;--mut:#BDB2A1;--hair:rgba(255,246,230,.13);--ember2:#FFB627;color:var(--fg)}
+.alt .tag,.alt2 .tag{color:var(--tomato-d)}
+.alt .tag::before,.alt2 .tag::before{background:var(--ember);box-shadow:none}
+.alt h2 em,.alt2 h2 em{color:var(--tomato-d)}
+.alt em .sw>span,.alt2 em .sw>span{background:none;color:var(--tomato-d);-webkit-text-fill-color:currentColor}
+h3,.led b,.ft b,.ail b,.perk b,.scenes b,.rowc b,.flt b,.toast b{font-family:var(--serif);font-weight:700;letter-spacing:-.012em}
+.lead{font-weight:400}
+.btn{font-family:var(--serif);font-weight:700;font-size:17px}
+.btn-hot{background:var(--ember);color:#190500;box-shadow:0 14px 34px -12px rgba(255,74,28,.8)}
+.btn-hot:hover{background:#ff6236;box-shadow:0 18px 44px -10px rgba(255,74,28,.95)}
+.btn-ink{background:var(--ink);color:var(--ivory)}
+.btn-ink:hover{background:#000}
+.logo{font-family:var(--serif);font-weight:800;font-size:18px}
+.logo em{color:var(--ember)}
+.logo-mark{background:var(--ember);color:#fff;border-radius:11px}
+.pre span em{color:var(--ember)}
+.nav a{font-weight:600}
+.lang button{font-weight:700}
+.badge,.tag{font-weight:500}
+/* marquee */
+.mq-w{background:var(--ember);border:0}
+.mq{mask:none;-webkit-mask:none;padding:15px 0}
+.mq li{color:#190500;font-style:normal;font-weight:800;letter-spacing:-.02em}
+.mq li svg{color:#190500;font-size:1em}
+/* manifesto */
+.js .alt #lit .lw{color:rgba(20,17,14,.14)}
+.js .alt #lit .lw.on{color:var(--fg)}
+.led.good{background:var(--ink);border-color:var(--ink)}
+.led.good i{background:var(--leaf);color:#04331c}
+.led.bad i{background:#FBE1D8;color:var(--tomato-d)}
+/* demo panel: a real cream dashboard card */
+.ctl{background:var(--card);color:var(--fg);border-color:transparent;box-shadow:0 40px 80px -40px #000}
+.ctl-col+.ctl-col{background:var(--ivory)}
+.live{color:var(--leaf-d);font-weight:700}
+.live i{background:var(--leaf)}
+.ctl-bar b{font-weight:700}
+.step{background:var(--paper2)}
+.step button{background:var(--card);font-weight:700;box-shadow:0 1px 0 var(--line)}
+.step button:hover{background:var(--ember2);background:#FFB627;color:var(--ink)}
+.step output{font-weight:700}
+.sw[role=switch]{background:#C9BFAE}
+.sw[role=switch][aria-checked=true]{background:var(--leaf-d)}
+.hint{background:#FFF0C9;border-color:transparent;color:#4e3b05}
+.oc{background:var(--card);border-color:var(--line)}
+.oc header{font-weight:700}
+.st{font-weight:700}
+.st0{background:#FFE3D8;color:#A32A08}.st1{background:#FFEDBE;color:#6E5200}.st2{background:#D3F5E1;color:#075C35}.st3{background:#E9E3D8;color:#5a5245}
+.oc .btn{background:var(--ink);color:var(--ivory)}
+/* bento */
+.bx{background:var(--card);border-color:var(--line)}
+.bx.k{background:var(--ink);border-color:var(--ink)}
+.bx.h{background:var(--ember);border-color:var(--ember);color:#190500}
+.bx.y{background:#FFB627;border-color:#FFB627;color:#231800}
+.bx.h p{color:#3c1003}.bx.y p{color:#4a3500}
+.bx.h::before,.bx.y::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.22),transparent 65%)}
+.bx.h::after,.bx.y::after{background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.8),transparent 70%)}
+.bx:not(.k):not(.h):not(.y)::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,74,28,.09),transparent 65%)}
+.bx:not(.k):not(.h):not(.y)::after{background:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),rgba(255,74,28,.7),transparent 70%)}
+.big-price span{background:none;color:#190500}
+.big-price s{opacity:.6}
+.parsed span{background:rgba(255,182,39,.16);border-color:transparent;color:#FFB627;font-weight:500}
+.opts span{background:var(--paper2);border-color:transparent;font-weight:600;border-radius:10px}
+.opts span.on{background:var(--ink);color:var(--ivory)}
+.sum{color:inherit}
+.sum .tt{border-top:1.5px dashed currentColor;font-weight:700}
+.seg{background:rgba(0,0,0,.09);border-radius:13px}
+.seg span{color:#231800;font-weight:700;border-radius:10px}
+.seg .on{background:#231800;color:#FFB627}
+.week i{background:var(--leaf-d)}
+.week .off i{background:repeating-linear-gradient(45deg,var(--line) 0 4px,transparent 4px 8px)}
+.bars i{background:#E7D9BF}
+.bars i.pk{background:var(--ember)}
+.conn{background:var(--paper2);border-color:transparent;font-weight:500}
+.conn span{color:var(--leaf-d);font-weight:700}
+.toast i{background:var(--ember);color:#190500}
+/* steps */
+.sp{background:var(--card);border-color:var(--line)}
+.sp-v{background:var(--ink);background-image:radial-gradient(70% 90% at 80% 0%,rgba(255,74,28,.26),transparent 70%)}
+.sp-b::before{font-style:normal;font-size:44px;color:var(--ember)}
+.fake-btn{background:var(--ember);color:#190500;font-family:var(--serif);font-weight:700}
+.fake-btn.g{background:var(--leaf)}
+.mrow em{color:#FFB627}
+/* dashboard */
+.app{background:var(--card);border-color:var(--line);box-shadow:0 60px 110px -60px rgba(20,17,14,.65)}
+.app-bar{background:var(--ivory)}
+.app-bar i{background:#DCCFB8}
+.side{background:var(--ink);border-color:transparent}
+.side a{font-weight:600}
+.side a.on{background:rgba(255,74,28,.22)}
+.lane{background:var(--paper2)}
+.lane h4{font-weight:700}
+.tk{filter:drop-shadow(0 3px 3px rgba(20,17,14,.14))}
+.kpi b{font-size:clamp(24px,2.4vw,31px);letter-spacing:-.03em}
+.ft svg{color:var(--tomato-d)}
+/* AI */
+.ail i{background:var(--ink);border-color:var(--ink);color:#FFB627}
+.flt{background:var(--card);border-color:transparent;color:var(--fg);box-shadow:0 22px 40px -18px rgba(20,17,14,.6)}
+.flt.a i{background:var(--leaf);color:#04331c}
+.flt.b i{background:#FFB627;color:#231800}
+/* pricing */
+.rtot b,.rcpt-h b{letter-spacing:-.03em}
+.rcpt-h b{font-size:26px}
+.rl span:last-child{font-weight:700}
+.save b{background:none;color:var(--leaf);-webkit-text-fill-color:currentColor;letter-spacing:-.03em}
+.calc h3{font-size:clamp(25px,2.5vw,33px)}
+.calc::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,74,28,.13),transparent 65%)}
+input[type=range]::-webkit-slider-runnable-track{height:6px;background:linear-gradient(90deg,var(--ember) var(--p),#2B251E var(--p))}
+input[type=range]::-moz-range-track{height:6px;background:#2B251E}
+input[type=range]::-moz-range-progress{height:6px;background:var(--ember)}
+input[type=range]::-webkit-slider-thumb{width:26px;height:26px;margin-top:-10px;background:var(--fg);border:5px solid var(--ember);box-shadow:none}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;background:var(--fg);border:5px solid var(--ember);box-shadow:none}
+.rg output{font-weight:700;color:#FFB627}
+.cmp i{height:12px;border-radius:5px}
+.cmp div>span b{font-weight:700}
+.rcpt .btn{font-family:var(--serif)}
+/* faq */
+.q button{font-family:var(--serif);font-weight:700}
+.q .pm{background:var(--paper2);border-color:transparent}
+.q.open .pm{background:var(--ember);color:#190500}
+/* cta over the video */
+.cta-sh{background:linear-gradient(135deg,rgba(20,17,14,.92),rgba(196,50,11,.74))}
+.cta em .sw>span{background:none;color:#FFB627;-webkit-text-fill-color:currentColor}
+.cta h2 em{color:#FFB627}
+.cta .btn-hot{background:var(--ivory);color:var(--ink);box-shadow:0 18px 44px -14px rgba(0,0,0,.6)}
+.cta .btn-hot:hover{background:#FFB627}
+/* footer */
+.ft-w{background:var(--ink);border:0}
+.wordmark{letter-spacing:-.05em;background:none;color:#2B251E;-webkit-text-fill-color:currentColor}
+.f-g h4{font-weight:500}
+.scenes b{font-size:19px}
+.facts dt{letter-spacing:-.03em}
+
+/* Responsive */
+@media (max-width:1180px){
+  .nav{display:none}.burger{display:grid}
+  .demo-grid{grid-template-columns:minmax(0,1fr) 320px}
+  .ctl-body{grid-template-columns:1fr}
+  .ctl-col+.ctl-col{border-left:0;border-top:1px solid var(--hair)}
+  .bx,.bx.w3{grid-column:span 6}
+  .bx.w5{grid-column:span 12}.bento .bx.w3{grid-column:span 12}
+  .kpis{grid-template-columns:1fr 1fr}
+  .app-b{grid-template-columns:minmax(0,1fr)}
+  .side{display:flex;gap:4px;overflow-x:auto;padding:8px;scrollbar-width:none;border-right:0;border-bottom:1px solid var(--hair)}
+  .side a{margin:0;white-space:nowrap}
+  .feats{grid-template-columns:1fr 1fr}
+  .story-g{grid-template-columns:minmax(0,1fr) 290px;gap:32px}
+  .story .phone{width:290px}
+  .story-r{position:absolute;right:calc(290px + 20px);bottom:0;padding:0;opacity:0;transform:translateY(40px);transition:.7s var(--ease);pointer-events:none}
+  .story.k .story-r{opacity:1;transform:none}
+}
+@media (max-width:960px){
+  .hero-row{grid-template-columns:minmax(0,1fr)}
+  .prob,.ai,.price-grid,.faq{grid-template-columns:minmax(0,1fr)}
+  .faq-h{position:static}
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .demo-grid{grid-template-columns:minmax(0,1fr)}
+  .ctl-body{grid-template-columns:1.1fr .9fr}
+  .ctl-col+.ctl-col{border-left:1px solid var(--hair);border-top:0}
+  .ai-v{height:min(560px,100vw)}
+  .flt.a{left:12px}.flt.b{right:12px}
+  .f-g{grid-template-columns:1fr 1fr 1fr}
+  .f-g>div:first-child{grid-column:1/-1}
+  .band-m{clip-path:inset(calc(var(--c,1)*14%) calc(var(--c,1)*10%) round calc(var(--c,1)*26px))}
+}
+@media (max-width:760px){
+  .story-g{display:flex;flex-direction:column;align-items:center;gap:14px;height:100%;padding-top:82px;padding-bottom:18px}
+  .story-in{align-items:stretch}
+  .story-l{width:100%;min-height:124px}
+  .story-l .tag,.story-l h2{display:none}
+  .scenes{margin:0}
+  .scenes li{display:none;border:0;padding:0}
+  .scenes li.on{display:block}
+  .scenes small{display:block;font-family:var(--mono);font-size:12px;color:var(--ember2);margin-bottom:2px}
+  .scenes b{font-weight:800;font-size:27px;line-height:1.1}
+  .story-c{flex:1;min-height:0;width:min(290px,100%)}
+  .story .phone{width:100%;height:100%;margin:0;transform:none;border-radius:42px}
+  .story .screen{border-radius:34px}
+  .story-r{right:auto;left:50%;translate:-50% 0;bottom:24px}
+  .printer{width:250px}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  .hdr .btn{display:none}
+  .hero h1{font-size:clamp(34px,10.6vw,62px)}
+  .hero-cta .btn{width:100%}
+  .facts{grid-template-columns:1fr 1fr;gap:14px 12px}
+  .ledger{grid-template-columns:minmax(0,1fr)}
+  .ctl-body{grid-template-columns:minmax(0,1fr)}
+  .ctl-col+.ctl-col{border-left:0;border-top:1px solid var(--hair)}
+  .ctl-col{padding:18px 16px}
+  .bx,.bx.w5,.bx.w3,.bento .bx.w3{grid-column:span 12;min-height:0}
+  .rail{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lane{height:226px}
+  .app-m{padding:12px}
+  .feats,.perks{grid-template-columns:minmax(0,1fr)}
+  .q .a p{padding-right:0}
+  .f-g{grid-template-columns:1fr 1fr}
+  .flt{padding:10px 12px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}
+  .mq-t{animation:none}
+  .js .rv{opacity:1;transform:none;filter:none;clip-path:none}
+  .js .rv .sw>span{transform:none}
+  .js .rcpt-w .rcpt{clip-path:none}
+  .js #lit .lw{color:var(--fg)}
+  .story{height:auto}.story-in{position:static;height:auto;padding-block:96px}
+  .band{height:auto}.band-in{position:static;height:70vh}.band-m{clip-path:none}.band-t{opacity:1;transform:none}
+  .story-r{position:static;opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+<div class="pre" aria-hidden="true"><span>Resto Pilot <em>AI</em></span><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="prog" id="prog" aria-hidden="true"></div>
+<a class="skip" href="#main" data-fr="Aller au contenu">Skip to content</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 24 24"><path d="M3 11h18"/><path d="M12 3a8 8 0 0 1 8 8H4a8 8 0 0 1 8-8z"/><path d="M5 15h14l-1 5H6z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.2L4 21l1.8-5.4A8 8 0 1 1 21 12z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></symbol>
+  <symbol id="i-bike" viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h-3l-4 8h6l3-5.5"/><path d="M12 6h3l3.5 11.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m6 4 14 8-14 8z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-percent" viewBox="0 0 24 24"><path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-euro" viewBox="0 0 24 24"><path d="M4 10h12M4 14h9"/><path d="M19 6a7 7 0 0 0-10 0c-3 3-3 9 0 12a7 7 0 0 0 10 0"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v6M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-6-2.5L2.4 15a2 2 0 0 1 3.1-2.6L6 14"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M19 12v9H5v-9"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10a7 7 0 0 1-14 0M12 17v5M8 22h8"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-pizza" viewBox="0 0 24 24"><path d="m2 21 20-8L12 2 2 21z"/><path d="M5.5 14.5 12 2"/><circle cx="9" cy="15" r="1.2"/><circle cx="13" cy="11" r="1.2"/><circle cx="7" cy="11" r="1.2"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><path d="M6 1v3M10 1v3M14 1v3"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 3 1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M19 3v4M21 5h-4M5 17v4M7 19H3"/></symbol>
+  <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-9 9 9 9 0 0 1-9-9z"/><path d="M7 11c0-4 2-6 5-7M12 11c0-3 1-5 4-6"/></symbol>
+</svg>
+
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <a href="#top" class="logo"><span class="logo-mark"><svg class="i"><use href="#i-logo"/></svg></span><span>RESTO <em>PILOT</em> AI</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#demo" data-fr="Démo">Live demo</a>
+      <a href="#features" data-fr="Fonctionnalités">Features</a>
+      <a href="#how" data-fr="Comment ça marche">How it works</a>
+      <a href="#dashboard" data-fr="Tableau de bord">Dashboard</a>
+      <a href="#pricing" data-fr="Tarifs">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="hdr-r">
+      <div class="lang" role="group" aria-label="Language"><button class="on" data-l="en" aria-pressed="true">EN</button><button data-l="fr" aria-pressed="false">FR</button></div>
+      <a href="#pricing" class="btn btn-hot" data-fr="Commencer à 50 €/sem.">Start for €50/week</a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><svg class="i"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="mnav" id="mnav">
+  <a href="#demo" data-fr="Démo">Live demo</a>
+  <a href="#features" data-fr="Fonctionnalités">Features</a>
+  <a href="#how" data-fr="Comment ça marche">How it works</a>
+  <a href="#dashboard" data-fr="Tableau de bord">Dashboard</a>
+  <a href="#pricing" data-fr="Tarifs">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <a href="#pricing" class="btn btn-hot" data-fr="Commencer à 50 €/semaine">Start for €50/week</a>
+</div>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <video class="hero-v" src="assets/video/hero.mp4" poster="assets/video/hero.jpg" autoplay muted loop playsinline aria-hidden="true"></video>
+  <div class="hero-sh"></div>
+  <canvas class="embers" data-n="80" aria-hidden="true"></canvas>
+  <div class="wrap hero-in">
+    <p class="badge rise"><span class="pulse"></span><span data-fr="API officielle WhatsApp Business Cloud">Official WhatsApp Business Cloud API</span></p>
+    <h1 data-split data-fr="Votre restaurant prend les commandes sur WhatsApp. <em>Automatiquement.</em> 24h/24.">Your restaurant takes orders on WhatsApp. <em>Automatically.</em> 24/7.</h1>
+    <div class="hero-row rise" style="--r:2">
+      <p class="hero-sub" data-fr="RESTO PILOT AI est un assistant intelligent qui répond à vos clients, affiche votre menu en direct, construit le panier, gère la livraison ou le retrait et confirme la commande — directement dans WhatsApp. Zéro appel manqué. Zéro application à télécharger.">RESTO PILOT AI is an intelligent assistant that answers your customers, shows your live menu, builds the cart, handles delivery or pickup and confirms the order — directly in WhatsApp. Zero missed calls. Zero apps to download.</p>
+      <div class="hero-cta">
+        <a href="#pricing" class="btn btn-hot" data-mag><span data-fr="Commencer à 50 €/semaine">Start for €50/week</span><svg class="i"><use href="#i-arrow"/></svg></a>
+        <a href="#demo" class="btn btn-line"><svg class="i"><use href="#i-play"/></svg><span data-fr="Essayer la démo">Try the live demo</span></a>
+      </div>
+    </div>
+    <dl class="facts rise" style="--r:4">
+      <div><dt>24/7</dt><dd data-fr="Commandes acceptées">Orders accepted</dd></div>
+      <div><dt>0%</dt><dd data-fr="Commission">Commission</dd></div>
+      <div><dt>FR + EN</dt><dd data-fr="Dès le lancement">From day one</dd></div>
+      <div><dt data-fr="50 €">€50</dt><dd data-fr="Par semaine, sans engagement">Per week, no commitment</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq-w"><div class="mq" role="img" aria-label="Built for fast food, pizzerias, restaurants, delivery kitchens, cafés and bakeries">
+  <div class="mq-t" aria-hidden="true">
+    <ul>
+      <li><svg class="i"><use href="#i-bowl"/></svg><span data-fr="Fast-food">Fast food</span></li>
+      <li><svg class="i"><use href="#i-pizza"/></svg><span>Pizzerias</span></li>
+      <li><svg class="i"><use href="#i-logo"/></svg><span>Restaurants</span></li>
+      <li><svg class="i"><use href="#i-bike"/></svg><span data-fr="Dark kitchens">Delivery kitchens</span></li>
+      <li><svg class="i"><use href="#i-coffee"/></svg><span data-fr="Cafés &amp; boulangeries">Cafés &amp; bakeries</span></li>
+      <li><svg class="i"><use href="#i-bowl"/></svg><span data-fr="Fast-food">Fast food</span></li>
+      <li><svg class="i"><use href="#i-pizza"/></svg><span>Pizzerias</span></li>
+      <li><svg class="i"><use href="#i-logo"/></svg><span>Restaurants</span></li>
+      <li><svg class="i"><use href="#i-bike"/></svg><span data-fr="Dark kitchens">Delivery kitchens</span></li>
+      <li><svg class="i"><use href="#i-coffee"/></svg><span data-fr="Cafés &amp; boulangeries">Cafés &amp; bakeries</span></li>
+    </ul>
+    <ul>
+      <li><svg class="i"><use href="#i-bowl"/></svg><span data-fr="Fast-food">Fast food</span></li>
+      <li><svg class="i"><use href="#i-pizza"/></svg><span>Pizzerias</span></li>
+      <li><svg class="i"><use href="#i-logo"/></svg><span>Restaurants</span></li>
+      <li><svg class="i"><use href="#i-bike"/></svg><span data-fr="Dark kitchens">Delivery kitchens</span></li>
+      <li><svg class="i"><use href="#i-coffee"/></svg><span data-fr="Cafés &amp; boulangeries">Cafés &amp; bakeries</span></li>
+      <li><svg class="i"><use href="#i-bowl"/></svg><span data-fr="Fast-food">Fast food</span></li>
+      <li><svg class="i"><use href="#i-pizza"/></svg><span>Pizzerias</span></li>
+      <li><svg class="i"><use href="#i-logo"/></svg><span>Restaurants</span></li>
+      <li><svg class="i"><use href="#i-bike"/></svg><span data-fr="Dark kitchens">Delivery kitchens</span></li>
+      <li><svg class="i"><use href="#i-coffee"/></svg><span data-fr="Cafés &amp; boulangeries">Cafés &amp; bakeries</span></li>
+    </ul>
+  </div>
+</div></div>
+
+<!-- MANIFESTO -->
+<section class="sec alt" id="problem">
+  <div class="wrap">
+    <p class="tag" data-fr="Le problème">The problem</p>
+    <h2 id="lit" data-fr="Chaque appel manqué est une commande perdue. Chaque ligne occupée est un client qui va ailleurs.">Every missed call is a lost order. Every busy line is a customer going elsewhere.</h2>
+    <p class="lead rv" data-fr="Vos clients utilisent déjà WhatsApp tous les jours. RESTO PILOT AI en fait votre canal de vente le plus rentable — sans personnel supplémentaire, sans commissions, sans applications.">Your customers already use WhatsApp every day. RESTO PILOT AI turns it into your most profitable sales channel — without extra staff, without commissions, without apps.</p>
+    <div class="ledger">
+        <div class="led bad rv"><i><svg class="i"><use href="#i-x"/></svg></i><div><b data-fr="Téléphone occupé pendant le rush">Phone busy during the rush</b><span data-fr="Le personnel jongle entre les appels et la cuisine. Commandes mal notées.">Staff juggling calls and the kitchen. Orders written down wrong.</span></div></div>
+        <div class="led bad rv"><i><svg class="i"><use href="#i-x"/></svg></i><div><b data-fr="Les plateformes de livraison prennent 25 à 30 %">Delivery platforms take 25–30%</b><span data-fr="Votre marge disparaît et le client ne vous appartient même pas.">Your margin disappears and you don't even own the customer.</span></div></div>
+        <div class="led good rv"><i><svg class="i"><use href="#i-check"/></svg></i><div><b data-fr="RESTO PILOT AI répond instantanément, à chaque fois">RESTO PILOT AI answers instantly, every time</b><span data-fr="Bons articles, bons prix, bons totaux — directement sur l'écran de votre cuisine.">Correct items, correct prices, correct totals — straight to your kitchen screen.</span></div></div>
+        <div class="led good rv"><i><svg class="i"><use href="#i-check"/></svg></i><div><b data-fr="Un tarif fixe. Zéro commission.">One flat fee. Zero commission.</b><span data-fr="50 € par semaine, résiliable à tout moment. Chaque client reste le vôtre.">€50 per week, cancel anytime. Every customer stays yours.</span></div></div>
+      </div>
+  </div>
+</section>
+
+<!-- SCROLL STORY -->
+<section class="story" id="story">
+  <div class="story-in">
+    <div class="wrap story-g">
+      <div class="story-l">
+        <p class="tag" data-fr="Le parcours client">The customer journey</p>
+        <h2 data-fr="Une commande complète, de <em>« Bonjour »</em> à « livrée »">One complete order, from <em>“Hi”</em> to delivered</h2>
+        <ol class="scenes" id="scenes">
+      <li><small data-fr="Étape 1">Step 1</small><b data-fr="Accueil &amp; menu">Greeting &amp; menu</b><div class="x"><div><p data-fr="Le client dit bonjour. Le bot l'accueille et affiche les catégories en direct.">Customer says hi. Bot welcomes them and shows live categories.</p></div></div></li>
+      <li><small data-fr="Étape 2">Step 2</small><b data-fr="Choisir &amp; personnaliser">Choose &amp; customize</b><div class="x"><div><p data-fr="Tailles, options, suppléments — avec des suggestions de vente additionnelle naturelles.">Sizes, options, extras — with upsell suggestions that feel natural.</p></div></div></li>
+      <li><small data-fr="Étape 3">Step 3</small><b data-fr="Panier &amp; validation">Cart &amp; checkout</b><div class="x"><div><p data-fr="Livraison ou retrait, adresse, frais, récapitulatif complet et confirmation.">Delivery or pickup, address, fees, full summary and confirmation.</p></div></div></li>
+      <li><small data-fr="Étape 4">Step 4</small><b data-fr="La cuisine la reçoit">Kitchen receives it</b><div class="x"><div><p data-fr="La commande n°124 apparaît dans votre tableau de bord avec un son. Acceptez et préparez.">Order #124 pops up in your dashboard with a sound. Accept and prepare.</p></div></div></li>
+      <li><small data-fr="Étape 5">Step 5</small><b data-fr="Suivi &amp; fidélisation">Updates &amp; loyalty</b><div class="x"><div><p data-fr="Le client reçoit les mises à jour, un remerciement, puis une promotion pour revenir.">Customer gets status updates, a thank-you, and later a promotion to come back.</p></div></div></li>
+    </ol>
+      </div>
+      <div class="story-c">
+        <div class="phone"><div class="screen">
+          <div class="wa-top"><div class="wa-av"><svg class="i"><use href="#i-logo"/></svg></div><div><b>Burger House</b><small data-fr="en ligne · RESTO PILOT AI">online · RESTO PILOT AI</small></div></div>
+          <div class="chat" id="sChat" aria-hidden="true"></div>
+          <div class="wa-in" aria-hidden="true"><span data-fr="Message">Message</span><i><svg class="i"><use href="#i-send"/></svg></i></div>
+        </div></div>
+      </div>
+      <div class="story-r" aria-hidden="true">
+        <div class="printer">
+          <div class="printer-top"><span data-fr="CUISINE">KITCHEN</span><i></i></div>
+          <div class="paper zig" id="sPaper"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO BAND -->
+<section class="band" id="band">
+  <div class="band-in">
+    <div class="band-m">
+      <video data-lazy src="assets/video/band.mp4" poster="assets/video/band.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+      <div class="band-sh"></div>
+    </div>
+    <div class="band-t">
+      <h2 data-fr="Les commandes ne s'arrêtent <em>jamais</em>">Orders <em>never</em> stop</h2>
+      <p data-fr="Même pendant le rush, même la nuit">Even during the rush, even at night</p>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE DEMO -->
+<section class="sec demo" id="demo">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="tag" data-fr="Démo interactive">Live demo</p>
+      <h2 data-fr="Changez un prix. <em>Le bot le sait déjà.</em>">Change a price. <em>The bot already knows.</em></h2>
+      <p class="lead" data-fr="Essayez vous-même : modifiez le menu à gauche, commandez dans le chat, puis faites avancer la commande. Le client est prévenu à chaque étape.">Try it yourself: edit the menu in the dashboard, order in the chat, then move the order along. The customer is told at every step.</p>
+    </div>
+    <div class="demo-grid rv">
+      <div class="ctl">
+        <div class="ctl-bar"><span><b>Burger House</b> · <span data-fr="Tableau de bord">Dashboard</span></span><span class="live"><i></i><span data-fr="En direct">Live</span></span></div>
+        <div class="ctl-body">
+          <div class="ctl-col">
+            <h3 data-fr="Votre menu">Your menu</h3>
+            <div class="rowc">
+              <div><b>Cheeseburger</b><small data-fr="Prix de base">Base price</small></div>
+              <div class="step"><button id="pMinus" aria-label="Lower price">−</button><output id="pOut" aria-live="polite">€9.00</output><button id="pPlus" aria-label="Raise price">+</button></div>
+            </div>
+            <div class="rowc">
+              <div><b data-fr="Frais de livraison">Delivery fee</b><small data-fr="Par commande">Per order</small></div>
+              <div class="step"><button id="fMinus" aria-label="Lower delivery fee">−</button><output id="fOut" aria-live="polite">€2.50</output><button id="fPlus" aria-label="Raise delivery fee">+</button></div>
+            </div>
+            <div class="rowc">
+              <div><b data-fr="Supplément bacon">Bacon extra</b><small data-fr="Disponible aujourd'hui">Available today</small></div>
+              <button class="sw" id="swBacon" role="switch" aria-checked="true" aria-label="Bacon available"></button>
+            </div>
+            <div class="rowc">
+              <div><b data-fr="Restaurant ouvert">Restaurant open</b><small data-fr="Fermeture temporaire">Temporary closure</small></div>
+              <button class="sw" id="swOpen" role="switch" aria-checked="true" aria-label="Restaurant open"></button>
+            </div>
+            <p class="hint"><svg class="i"><use href="#i-sparkle"/></svg><span data-fr="Passez le burger de 9 € à 10 € et regardez le téléphone.">Take the burger from €9 to €10 and watch the phone.</span></p>
+          </div>
+          <div class="ctl-col">
+            <h3 data-fr="Commandes en direct">Live orders</h3>
+            <div id="dOrders"></div>
+          </div>
+        </div>
+      </div>
+      <div class="phone dphone"><div class="screen">
+        <div class="wa-top"><div class="wa-av"><svg class="i"><use href="#i-logo"/></svg></div><div><b>Burger House</b><small data-fr="en ligne · RESTO PILOT AI">online · RESTO PILOT AI</small></div></div>
+        <div class="chat" id="dChat"></div>
+        <div class="chips" id="dChips"></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec alt" id="features">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="tag" data-fr="Tout est inclus">Everything included</p>
+      <h2 data-fr="Un système de commande complet, <em>directement dans WhatsApp</em>">A complete ordering system living <em>inside WhatsApp</em></h2>
+      <p class="lead" data-fr="Du premier « Bonjour » au repas livré, chaque étape est automatisée, précise et à votre image.">From the first “Hi” to the delivered meal, every step is automated, accurate and on-brand.</p>
+    </div>
+    <div class="bento">
+      <article class="bx k w5 rv">
+        <div class="viz" aria-hidden="true">
+          <span class="mini o">2 cheesburgr sans oignon stp 🙏</span>
+          <div class="parsed"><span data-fr="2× Cheeseburger">2× Cheeseburger</span><span data-fr="sans oignon">no onions</span><span data-fr="langue : FR">language: FR</span></div>
+        </div>
+        <div><h3 data-fr="Conversations naturelles">Natural conversations</h3><p data-fr="Les clients écrivent normalement, avec des fautes et du langage familier, en français ou en anglais. L'IA comprend et les guide.">Customers write normally, with typos and slang, in French or English. The AI understands and guides them.</p></div>
+      </article>
+      <article class="bx h w3 rv">
+        <div class="viz" aria-hidden="true"><div class="big-price"><s data-fr="9 €">€9</s><span data-fr="10 €">€10</span></div></div>
+        <div><h3 data-fr="Menu &amp; prix en direct">Live menu &amp; pricing</h3><p data-fr="Changez un prix ou désactivez un plat — le chatbot l'applique dès le message suivant.">Change a price or disable a dish in your dashboard — the chatbot uses it in the very next message.</p></div>
+      </article>
+      <article class="bx rv">
+        <div class="viz" aria-hidden="true"><div class="opts"><span data-fr="Normal">Regular</span><span class="on" data-fr="Grand<em>+2 €</em>">Large<em>+€2</em></span><span class="on">Bacon<em data-fr="+1 €">+€1</em></span><span data-fr="Sauce maison<em>+0,50 €</em>">House sauce<em>+€0.50</em></span></div></div>
+        <div><h3 data-fr="Tailles, options &amp; suppléments">Sizes, options &amp; extras</h3><p data-fr="Choix obligatoires, suppléments optionnels, menus et promotions — chacun avec son prix, calculé automatiquement.">Required choices, optional add-ons, combos and promotions — each with its own price, calculated automatically.</p></div>
+      </article>
+      <article class="bx rv">
+        <div class="viz" aria-hidden="true"><div class="sum"><div><span data-fr="1× Grand Cheeseburger">1× Large Cheeseburger</span><span>12.00</span></div><div><span data-fr="1× Frites">1× Fries</span><span>3.00</span></div><div class="tt"><span>Total</span><span data-fr="15,00 €">€15.00</span></div></div></div>
+        <div><h3 data-fr="Panier intelligent &amp; totaux">Smart cart &amp; totals</h3><p data-fr="Ajouter, retirer, modifier les quantités. Chaque total est calculé par le système, jamais inventé par l'IA.">Add, remove, change quantities. Every total is computed by the system, never invented by the AI.</p></div>
+      </article>
+      <article class="bx y rv">
+        <div class="viz" aria-hidden="true"><div class="seg"><span class="on"><svg class="i"><use href="#i-bike"/></svg><span data-fr="Livraison">Delivery</span></span><span data-fr="Retrait">Pickup</span></div><p class="seg-n" data-fr="Frais 2,50 € · gratuit dès 30 €">Fee €2.50 · free over €30</p></div>
+        <div><h3 data-fr="Livraison ou retrait">Delivery or pickup</h3><p data-fr="Vos propres frais de livraison, seuil de livraison gratuite et commande minimum. Adresse collectée automatiquement.">Your own delivery fees, free-delivery threshold and minimum order. Address collected automatically.</p></div>
+      </article>
+      <article class="bx rv">
+        <div class="viz" aria-hidden="true"><div class="week"><span class="off"><i></i><b data-fr="L">M</b></span><span><i style="--h:62%"></i><b data-fr="M">T</b></span><span><i style="--h:62%"></i><b data-fr="M">W</b></span><span><i style="--h:70%"></i><b data-fr="J">T</b></span><span><i style="--h:100%"></i><b data-fr="V">F</b></span><span><i style="--h:100%"></i><b data-fr="S">S</b></span><span><i style="--h:80%"></i><b data-fr="D">S</b></span></div></div>
+        <div><h3 data-fr="Respecte vos horaires">Opening hours aware</h3><p data-fr="Fermé ? Le bot l'indique et affiche votre réouverture. Jours fériés et fermetures temporaires inclus.">Closed? The bot says so and shows when you reopen. Holidays and temporary closures included.</p></div>
+      </article>
+      <article class="bx k rv">
+        <div class="viz" aria-hidden="true"><div class="toast"><i><svg class="i"><use href="#i-bell"/></svg></i><div><b data-fr="Nouvelle commande n°124">New order #124</b><small data-fr="Sophie · Livraison · 17,50 €">Sophie · Delivery · €17.50</small></div></div></div>
+        <div><h3 data-fr="Commandes en temps réel">Real-time order dashboard</h3><p data-fr="Les nouvelles commandes apparaissent instantanément avec un son. Changez le statut et le client est notifié sur WhatsApp.">New orders appear instantly with a sound. Update the status and the customer is notified on WhatsApp.</p></div>
+      </article>
+      <article class="bx rv">
+        <div class="viz" aria-hidden="true"><div class="bars"><i style="--h:18%"></i><i style="--h:44%"></i><i style="--h:72%"></i><i style="--h:38%"></i><i style="--h:22%"></i><i style="--h:30%"></i><i style="--h:58%"></i><i class="pk" style="--h:100%"></i><i class="pk" style="--h:88%"></i><i style="--h:52%"></i><i style="--h:24%"></i></div></div>
+        <div><h3 data-fr="Statistiques &amp; rapports">Analytics &amp; reports</h3><p data-fr="Meilleures ventes, heures de pointe, panier moyen, clients fidèles — plus un résumé quotidien envoyé sur WhatsApp.">Best sellers, peak hours, average basket, repeat customers — plus a daily summary sent to you on WhatsApp.</p></div>
+      </article>
+      <article class="bx rv">
+        <div class="viz" aria-hidden="true"><div class="conn"><b>+33 1 •• •• •• 24</b><span><svg class="i"><use href="#i-check"/></svg><span data-fr="Connecté">Connected</span></span></div></div>
+        <div><h3 data-fr="Votre propre numéro WhatsApp">Your own WhatsApp number</h3><p data-fr="Connectez votre numéro WhatsApp Business en quelques clics via l'inscription officielle Meta. Vos données restent 100 % isolées.">Connect your WhatsApp Business number in a few clicks through Meta's official signup. Your data stays 100% isolated.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec alt2" id="how">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="tag" data-fr="Comment ça marche">How it works</p>
+      <h2 data-fr="En ligne en 3 étapes simples. <em>Aucune compétence technique requise.</em>">Live in 3 simple steps. <em>No technical skills needed.</em></h2>
+    </div>
+    <div class="steps">
+      <article class="sp rv">
+        <div class="sp-v" aria-hidden="true"><div class="fld"><small data-fr="Nom du restaurant">Restaurant name</small>Burger House</div><div class="fld"><small data-fr="Formule">Plan</small><span data-fr="50 € / semaine">€50 / week</span></div><div class="fake-btn" data-fr="Créer mon compte">Create my account</div></div>
+        <div class="sp-b"><h3 data-fr="Créez votre compte">Create your account</h3><p data-fr="Abonnez-vous pour 50 €/semaine. Votre tableau de bord est prêt immédiatement. Ajoutez votre nom, logo, adresse et horaires.">Subscribe for €50/week. Your restaurant dashboard is ready immediately. Add your name, logo, address and opening hours.</p></div>
+      </article>
+      <article class="sp rv" style="--d:.1s">
+        <div class="sp-v" aria-hidden="true"><div class="mrow"><span>Cheeseburger</span><em data-fr="9,00 €">€9.00</em></div><div class="mrow"><span>Margherita</span><em data-fr="11,50 €">€11.50</em></div><div class="mrow"><span data-fr="Frites maison">House fries</span><em data-fr="3,00 €">€3.00</em></div><div class="mrow"><span data-fr="Menu Duo">Duo combo</span><em data-fr="19,90 €">€19.90</em></div></div>
+        <div class="sp-b"><h3 data-fr="Créez votre menu">Build your menu</h3><p data-fr="Catégories, plats, photos, prix, tailles, suppléments, menus. Un assistant guidé vous accompagne en quelques minutes.">Categories, dishes, photos, prices, sizes, extras, combos. A guided wizard walks you through it in minutes.</p></div>
+      </article>
+      <article class="sp rv" style="--d:.2s">
+        <div class="sp-v" aria-hidden="true"><div class="fake-btn g"><svg class="i"><use href="#i-chat"/></svg><span data-fr="Connecter WhatsApp">Connect WhatsApp</span></div><div class="fld"><small data-fr="Statut">Status</small><span data-fr="Assistant actif — prêt à recevoir des commandes">Assistant live — ready for orders</span></div></div>
+        <div class="sp-b"><h3 data-fr="Connectez WhatsApp et c'est parti">Connect WhatsApp &amp; go</h3><p data-fr="Cliquez sur « Connecter WhatsApp », connectez-vous avec Facebook, choisissez votre numéro. Votre assistant IA prend les commandes immédiatement.">Click “Connect WhatsApp”, log in with Facebook, choose your number. Your AI assistant starts taking orders right away.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="sec alt" id="dashboard">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="tag" data-fr="Votre tableau de bord">Your dashboard</p>
+      <h2 data-fr="Gérez tout votre restaurant depuis <em>un seul écran</em>">Run your whole restaurant from <em>one clean screen</em></h2>
+      <p class="lead" data-fr="Commandes, menu, horaires, livraison, équipe et statistiques — sur ordinateur, tablette ou téléphone.">Orders, menu, hours, delivery settings, staff and statistics — on desktop, tablet or phone.</p>
+    </div>
+    <div class="app-p"><div class="app" id="app">
+      <div class="app-bar"><i></i><i></i><i></i><span data-fr="Burger House — Commandes">Burger House — Orders</span><em data-fr="Données de démo">Demo data</em></div>
+      <div class="app-b">
+        <div class="side">
+          <a class="on"><svg class="i"><use href="#i-inbox"/></svg><span data-fr="Commandes">Orders</span></a>
+          <a><svg class="i"><use href="#i-list"/></svg><span>Menu</span></a>
+          <a><svg class="i"><use href="#i-clock"/></svg><span data-fr="Horaires">Hours</span></a>
+          <a><svg class="i"><use href="#i-bike"/></svg><span data-fr="Livraison">Delivery</span></a>
+          <a><svg class="i"><use href="#i-users"/></svg><span data-fr="Clients">Customers</span></a>
+          <a><svg class="i"><use href="#i-chart"/></svg><span data-fr="Statistiques">Analytics</span></a>
+          <a><svg class="i"><use href="#i-chat"/></svg><span>WhatsApp</span></a>
+          <a><svg class="i"><use href="#i-settings"/></svg><span data-fr="Paramètres">Settings</span></a>
+        </div>
+        <div class="app-m">
+          <div class="kpis">
+            <div class="kpi"><small data-fr="Commandes du jour">Today's orders</small><b>47</b></div>
+            <div class="kpi"><small data-fr="Chiffre du jour">Revenue today</small><b data-fr="812 €">€812</b></div>
+            <div class="kpi"><small data-fr="Panier moyen">Avg. basket</small><b data-fr="17,30 €">€17.30</b></div>
+            <div class="kpi"><small data-fr="Temps de réponse">Avg. reply time</small><b>2s</b></div>
+          </div>
+          <div class="rail" id="rail"></div>
+        </div>
+      </div>
+    </div></div>
+    <div class="feats">
+      <div class="ft rv"><svg class="i"><use href="#i-bell"/></svg><b data-fr="Notifications instantanées">Instant notifications</b><span data-fr="Son, alerte navigateur et notification WhatsApp à chaque commande.">Sound, browser alert and WhatsApp ping on every new order.</span></div>
+      <div class="ft rv" style="--d:.08s"><svg class="i"><use href="#i-users"/></svg><b data-fr="Comptes équipe">Staff accounts</b><span data-fr="Invitez vos employés à gérer les commandes avec des droits limités.">Invite employees to manage orders with limited permissions.</span></div>
+      <div class="ft rv" style="--d:.16s"><svg class="i"><use href="#i-download"/></svg><b data-fr="Export &amp; historique">Export &amp; history</b><span data-fr="Recherche par client, date ou numéro. Export Excel.">Search by customer, date or order number. Export to Excel.</span></div>
+      <div class="ft rv" style="--d:.24s"><svg class="i"><use href="#i-hand"/></svg><b data-fr="Reprise humaine">Human handover</b><span data-fr="Mettez le bot en pause et répondez vous-même aux demandes spéciales.">Pause the bot and reply yourself for special requests.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="sec alt2">
+  <div class="wrap ai">
+    <div class="rv">
+      <p class="tag" data-fr="Propulsé par l'IA">Powered by AI</p>
+      <h2 data-fr="Un assistant qui <em>vend,</em> pas seulement qui répond">An assistant that <em>sells,</em> not just answers</h2>
+      <p class="lead" data-fr="RESTO PILOT AI utilise les derniers modèles de langage — mais les prix, produits et totaux viennent toujours de votre base de données. L'IA n'invente jamais rien.">RESTO PILOT AI uses the latest language models — but prices, products and totals always come from your database. The AI never invents anything.</p>
+      <ul class="ail">
+        <li><i><svg class="i"><use href="#i-target"/></svg></i><div><b data-fr="Vente additionnelle naturelle">Natural upselling</b><p data-fr="« Des frites avec ça ? » au bon moment, pour faire monter le panier sans forcer.">“Fries with that?” at the right moment, to lift the basket without pushing.</p></div></li>
+        <li><i><svg class="i"><use href="#i-refresh"/></svg></i><div><b data-fr="Relance des paniers abandonnés">Abandoned cart recovery</b><p data-fr="Un rappel amical si un client s'arrête en cours de commande. Des commandes que vous auriez perdues.">A friendly reminder if a customer stops mid-order. Orders you would have lost.</p></div></li>
+        <li><i><svg class="i"><use href="#i-chart"/></svg></i><div><b data-fr="Rapports quotidiens &amp; hebdomadaires">Daily &amp; weekly reports</b><p data-fr="Chiffre d'affaires, meilleures ventes, heures de pointe et clients fidèles — livrés sur WhatsApp chaque matin.">Revenue, best sellers, peak hours and repeat customers — delivered on WhatsApp every morning.</p></div></li>
+        <li><i><svg class="i"><use href="#i-gift"/></svg></i><div><b data-fr="Promotions &amp; réactivation">Promotions &amp; re-engagement</b><p data-fr="Envoyez des offres approuvées aux clients ayant donné leur accord. Faites revenir ceux qui n'ont pas commandé depuis un moment.">Send approved offers to customers who opted in. Bring back the ones who haven't ordered in a while.</p></div></li>
+        <li><i><svg class="i"><use href="#i-mic"/></svg></i><div><b data-fr="Texte, images &amp; vocaux">Text, images &amp; voice</b><p data-fr="Les clients peuvent même envoyer un vocal — l'assistant le transcrit et le comprend.">Customers can even send a voice note — the assistant transcribes and understands it.</p></div></li>
+      </ul>
+    </div>
+    <div class="ai-v rv">
+      <figure class="photo"><video data-lazy src="assets/video/macro.mp4" poster="assets/video/macro.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></figure>
+      <div class="flt a"><i><svg class="i"><use href="#i-zap"/></svg></i><div><b data-fr="Vente additionnelle acceptée">Upsell accepted</b><small data-fr="+ Pain à l'ail 3,50 €">+ Garlic bread €3.50</small></div></div>
+      <div class="flt b"><i><svg class="i"><use href="#i-chart"/></svg></i><div><b data-fr="Rapport du jour prêt">Daily report ready</b><small data-fr="Envoyé sur WhatsApp à 08:00">Sent on WhatsApp at 08:00</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="tag" data-fr="Tarif simple">Simple pricing</p>
+      <h2 data-fr="Une formule. Tout inclus. <em>Résiliable à tout moment.</em>">One plan. Everything included. <em>Cancel anytime.</em></h2>
+      <p class="lead" data-fr="Pas de frais d'installation, pas de commission sur les commandes, pas de contrat longue durée. Un seul tarif hebdomadaire fixe.">No setup fee, no commission on orders, no long-term contract. Just one flat weekly price.</p>
+    </div>
+    <div class="price-grid">
+      <div class="rcpt-w rv">
+        <div class="rcpt zig">
+          <div class="rcpt-h"><b>RESTO PILOT AI</b><span data-fr="Formule Restaurant · facturé chaque semaine">Restaurant plan · billed weekly</span></div>
+          <div class="rl"><span data-fr="Commandes &amp; conversations illimitées">Unlimited orders &amp; conversations</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Produits, catégories &amp; photos illimités">Unlimited products, categories &amp; photos</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Votre numéro WhatsApp Business (API officielle Meta)">Your own WhatsApp Business number (official Meta API)</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Assistant IA en français &amp; anglais">AI assistant in French &amp; English</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Commandes en temps réel + comptes équipe">Real-time order dashboard + staff accounts</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Livraison &amp; retrait avec vos propres frais">Delivery &amp; pickup with your own fees</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Vente additionnelle, relance panier, promotions">Upselling, cart recovery, promotions</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Statistiques &amp; rapports WhatsApp quotidiens">Analytics &amp; daily WhatsApp reports</span><span data-fr="inclus">incl.</span></div>
+          <div class="rl"><span data-fr="Support prioritaire &amp; aide à l'installation">Priority support &amp; onboarding help</span><span data-fr="inclus">incl.</span></div>
+          <hr>
+          <div class="rl z"><span data-fr="Frais d'installation">Setup fee</span><span data-fr="0,00 €">€0.00</span></div>
+          <div class="rl z"><span data-fr="Commission sur commandes">Commission on orders</span><span>0%</span></div>
+          <hr>
+          <div class="rtot"><span>TOTAL</span><b data-fr="50 €<small>/semaine</small>">€50<small>/week</small></b></div>
+          <p class="rsub" data-fr="Sans engagement · Résiliation en un clic">No commitment · Cancel in one click</p>
+          <!-- Connect to Stripe Checkout when the subscription flow is live -->
+          <a href="#pricing" class="btn btn-ink" data-checkout><span data-fr="Commencer à 50 €/semaine">Start for €50/week</span><svg class="i"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="rv">
+        <div class="calc">
+          <h3 data-fr="Combien vous coûtent les applis de livraison ?">What do delivery apps cost you?</h3>
+          <p data-fr="Entrez vos chiffres. Comparez avec un tarif fixe.">Enter your numbers. Compare with one flat fee.</p>
+          <div class="rg"><label for="cO"><span data-fr="Commandes par semaine">Orders per week</span><output id="cOo"></output></label><input type="range" id="cO" min="20" max="600" step="10" value="120"></div>
+          <div class="rg"><label for="cB"><span data-fr="Panier moyen">Average basket</span><output id="cBo"></output></label><input type="range" id="cB" min="8" max="50" step="1" value="17"></div>
+          <div class="rg"><label for="cC"><span data-fr="Commission de la plateforme">Platform commission</span><output id="cCo"></output></label><input type="range" id="cC" min="15" max="35" step="1" value="30"></div>
+          <div class="cmp">
+            <div class="a"><span><span data-fr="Applis de livraison, par semaine">Delivery apps, per week</span><b id="cA"></b></span><i id="cAb"></i></div>
+            <div class="b"><span><span data-fr="RESTO PILOT AI, par semaine">RESTO PILOT AI, per week</span><b id="cR"></b></span><i id="cRb"></i></div>
+          </div>
+          <div class="save"><small data-fr="Vous gardez, sur un an">You keep, over a year</small><b id="cS"></b>
+            <small class="fine" data-fr="Estimation à partir de vos chiffres, si ces commandes passent par WhatsApp. Hors frais de messagerie Meta, de paiement et de livraison.">An estimate from your numbers, if these orders move to WhatsApp. Excludes Meta messaging, payment and delivery costs.</small></div>
+        </div>
+        <div class="perks">
+          <div class="perk"><b data-fr="Rentabilisé rapidement">Pays for itself fast</b><span data-fr="Avec un panier de 17 €, trois commandes représentent un abonnement hebdomadaire.">At a €17 basket, three orders add up to a week's subscription.</span></div>
+          <div class="perk"><b data-fr="Sans engagement">No lock-in</b><span data-fr="Pause ou résiliation depuis votre tableau de bord. Réactivation en un clic.">Pause or cancel from your dashboard. Reactivate in one click.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add a testimonials section here once real restaurants have agreed to be quoted. -->
+
+<!-- FAQ -->
+<section class="sec alt" id="faq">
+  <div class="wrap faq">
+    <div class="faq-h rv">
+      <p class="tag">FAQ</p>
+      <h2 data-fr="Des questions ? <em>Nous avons les réponses.</em>">Questions? <em>We've got answers.</em></h2>
+    </div>
+    <div class="rv" id="faqList">
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="Ai-je besoin d'un nouveau numéro de téléphone ?">Do I need a new phone number?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="Non. Vous connectez votre numéro WhatsApp Business existant via le processus officiel de Meta. Si vous préférez, vous pouvez aussi utiliser un nouveau numéro dédié.">No. You connect your existing WhatsApp Business number through Meta's official process. If you prefer, you can also use a new dedicated number.</p></div></div></div>
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="Est-ce l'API officielle de WhatsApp ?">Is this the official WhatsApp API?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="Oui. RESTO PILOT AI est construit sur l'API officielle WhatsApp Business Cloud de Meta, le moyen autorisé d'automatiser un numéro WhatsApp Business.">Yes. RESTO PILOT AI is built on Meta's official WhatsApp Business Cloud API, the approved way to automate a WhatsApp Business number.</p></div></div></div>
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="L'IA peut-elle se tromper sur les prix ?">Can the AI make mistakes on prices?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="Non. L'IA comprend seulement ce que veut le client. Produits, prix, disponibilité et totaux sont toujours calculés par le système à partir de votre base de données menu.">No. The AI only understands what the customer wants. Products, prices, availability and totals are always calculated by the system from your menu database.</p></div></div></div>
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="Et si un client demande quelque chose d'inhabituel ?">What if a customer asks something unusual?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="L'assistant pose une question de clarification. S'il ne peut toujours pas aider, il propose de vous passer la main — vous répondez depuis votre tableau de bord et relancez le bot quand vous avez terminé.">The assistant asks a clarifying question. If it still can't help, it offers to hand over to you — you reply from your dashboard and resume the bot when you're done.</p></div></div></div>
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="Mes clients doivent-ils installer quelque chose ?">Do my customers need to install anything?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="Rien du tout. Ils envoient simplement un message à votre restaurant sur WhatsApp, comme ils le font déjà avec leurs proches.">Nothing. They simply message your restaurant on WhatsApp, as they already do with friends and family.</p></div></div></div>
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="Puis-je résilier à tout moment ?">Can I cancel at any time?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="Oui. La facturation est hebdomadaire, sans engagement. Mettez en pause ou résiliez depuis votre tableau de bord en un clic, et réactivez quand vous voulez.">Yes. Billing is weekly with no commitment. Pause or cancel from your dashboard in one click, and reactivate whenever you like.</p></div></div></div>
+      <div class="q"><h3><button aria-expanded="false"><span data-fr="Mes données sont-elles sécurisées et conformes au RGPD ?">Is my data secure and GDPR compliant?</span><span class="pm"><svg class="i"><use href="#i-plus"/></svg></span></button></h3><div class="a"><div><p data-fr="Les données de chaque restaurant sont totalement isolées et chiffrées en transit, avec des outils d'export et de suppression intégrés pour vous aider à respecter le RGPD.">Each restaurant's data is fully isolated and encrypted in transit, with export and deletion tools built in to support your GDPR obligations.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <video data-lazy src="assets/video/burgers.mp4" poster="assets/video/burgers.jpg" muted loop playsinline preload="none" aria-hidden="true"></video>
+  <div class="cta-sh"></div>
+  <canvas class="embers" data-n="46" aria-hidden="true"></canvas>
+  <div class="wrap cta-in rv">
+    <h2 data-fr="Prêt à prendre des commandes <em>pendant que vous dormez ?</em>">Ready to take orders <em>while you sleep?</em></h2>
+    <p data-fr="Faites de WhatsApp votre meilleur canal de vente. Installation en quelques minutes, résiliable à tout moment.">Turn WhatsApp into your best-performing sales channel. Set up in minutes, cancel anytime.</p>
+    <a href="#pricing" class="btn btn-hot" data-mag><span data-fr="Commencer à 50 €/semaine — sans engagement">Start for €50/week — no commitment</span><svg class="i"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="ft-w">
+  <div class="wrap">
+    <div class="f-g">
+      <div>
+        <a href="#top" class="logo"><span class="logo-mark"><svg class="i"><use href="#i-logo"/></svg></span><span>RESTO <em>PILOT</em> AI</span></a>
+        <p data-fr="L'assistant de commande IA pour restaurants et fast-foods, construit sur l'API officielle WhatsApp Business Cloud.">The AI ordering assistant for restaurants and fast-food businesses, built on the official WhatsApp Business Cloud API.</p>
+      </div>
+      <div><h4 data-fr="Produit">Product</h4><a class="fl" href="#features" data-fr="Fonctionnalités">Features</a><a class="fl" href="#how" data-fr="Comment ça marche">How it works</a><a class="fl" href="#dashboard" data-fr="Tableau de bord">Dashboard</a><a class="fl" href="#pricing" data-fr="Tarifs">Pricing</a></div>
+      <div><h4 data-fr="Entreprise">Company</h4><a class="fl" href="#" data-fr="À propos">About</a><a class="fl" href="#">Contact</a><a class="fl" href="#faq">FAQ</a><a class="fl" href="#">Support</a></div>
+      <div><h4 data-fr="Légal">Legal</h4><a class="fl" href="#" data-fr="Conditions d'utilisation">Terms of service</a><a class="fl" href="#" data-fr="Politique de confidentialité">Privacy policy</a><a class="fl" href="#" data-fr="RGPD">GDPR</a></div>
+    </div>
+    <div class="wordmark" aria-hidden="true">RESTO PILOT AI</div>
+    <div class="f-b">
+      <span>© 2026 RESTO PILOT AI. <span data-fr="Tous droits réservés.">All rights reserved.</span></span>
+      <span data-fr="Non affilié à Meta ou WhatsApp. WhatsApp est une marque de Meta Platforms, Inc.">Not affiliated with Meta or WhatsApp. WhatsApp is a trademark of Meta Platforms, Inc.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let lang = 'en';
+const fr = () => lang === 'fr';
+const eur = (v, d = 2) => fr() ? v.toFixed(d).replace('.', ',') + ' €' : '€' + v.toFixed(d);
+const eur0 = v => new Intl.NumberFormat(fr() ? 'fr-FR' : 'en-IE', {style: 'currency', currency: 'EUR', maximumFractionDigits: 0}).format(v);
+const STATUS = {en: ['New', 'Preparing', 'Ready', 'Delivered'], fr: ['Nouvelle', 'En préparation', 'Prête', 'Livrée']};
+
+/* ---- Chat helpers shared by the hero and the demo ---- */
+function bubble(box, dir, html) {
+  const el = document.createElement('div');
+  el.className = 'bub ' + dir; el.innerHTML = html;
+  box.append(el); box.scrollTop = box.scrollHeight;
+  return el;
+}
+async function botSay(box, html, alive, wait = 650) {
+  if (calm) { bubble(box, 'in', html); return; }
+  const el = bubble(box, 'in', '<span class="dots"><i></i><i></i><i></i></span>');
+  await sleep(wait);
+  if (!alive()) { el.remove(); return; }
+  el.innerHTML = html; box.scrollTop = box.scrollHeight;
+}
+
+/* ---- Scroll story: the order plays as you scroll ---- */
+const story = (() => {
+  const sec = $('#story'), chat = $('#sChat'), paper = $('#sPaper'), scenes = $$('#scenes li');
+  let items = [];
+  const script = () => fr() ? {
+    chat: [[.03, 'out', 'Salut, vous êtes ouverts ?'], [.09, 'in', 'Bienvenue chez Burger House ! Oui. <b>Burgers · Pizzas · Tacos · Boissons</b>'],
+      [.21, 'out', 'grand cheeseburger avec bacon stp'], [.29, 'in', 'Parfait : 1× Grand Cheeseburger + Bacon = <b>12 €</b>. Des frites avec ça ? (3 €)'],
+      [.41, 'out', 'oui ! en livraison'], [.47, 'in', 'Total <b>17,50 €</b> dont 2,50 € de livraison. Votre adresse ?'], [.53, 'out', '12 rue Oberkampf'],
+      [.6, 'in', '✓ Commande n°124 confirmée. Prête dans ~25 min.'],
+      [.83, 'in', 'Votre commande est en préparation 🍳'], [.9, 'in', 'Votre commande est prête !'], [.96, 'in', 'Livrée. Merci et bon appétit !']],
+    head: 'Commande n°124', lines: [['1× Grand Cheeseburger', '11.00'], ['  + Bacon', '1.00'], ['1× Frites', '3.00'], ['Livraison', '2.50']], total: '17,50 €', stamp: 'CONFIRMÉE'
+  } : {
+    chat: [[.03, 'out', 'Hi, are you open?'], [.09, 'in', 'Welcome to Burger House! Yes. <b>Burgers · Pizzas · Tacos · Drinks</b>'],
+      [.21, 'out', 'large cheeseburger with bacon pls'], [.29, 'in', 'Perfect: 1× Large Cheeseburger + Bacon = <b>€12</b>. Fries with that? (€3)'],
+      [.41, 'out', 'yes! delivery please'], [.47, 'in', 'Total <b>€17.50</b> incl. €2.50 delivery. Your address?'], [.53, 'out', '12 rue Oberkampf'],
+      [.6, 'in', '✓ Order #124 confirmed. Ready in ~25 min.'],
+      [.83, 'in', 'Your order is being prepared 🍳'], [.9, 'in', 'Your order is ready!'], [.96, 'in', 'Delivered. Thank you, enjoy your meal!']],
+    head: 'Order #124', lines: [['1× Large Cheeseburger', '11.00'], ['  + Bacon', '1.00'], ['1× Fries', '3.00'], ['Delivery', '2.50']], total: '€17.50', stamp: 'CONFIRMED'
+  };
+  const pl = (t, l, r = '', c = '') => {
+    const el = document.createElement('div');
+    el.className = 'pl ' + c;
+    el.innerHTML = `<div><span>${l}</span>${r ? `<span>${r}</span>` : ''}</div>`;
+    paper.append(el); items.push({t, el});
+  };
+  const build = () => {
+    const s = script();
+    chat.innerHTML = ''; paper.innerHTML = ''; items = [];
+    s.chat.forEach(([t, dir, html]) => { const el = bubble(chat, dir, html); items.push({t, el}); });
+    pl(.61, 'BURGER HOUSE', '', 'c h');
+    pl(.62, s.head + ' · 19:02', '', 'c s');
+    s.lines.forEach((l, i) => pl(.64 + i * .025, l[0], l[1]));
+    pl(.74, 'TOTAL', s.total, 'r t');
+    const st = document.createElement('div');
+    st.className = 'stamp'; st.textContent = s.stamp; paper.append(st);
+    items.push({t: .77, el: st});
+    render(calm ? 1 : last);
+  };
+  let last = 0;
+  const render = p => {
+    last = p;
+    items.forEach(i => i.el.classList.toggle('on', p >= i.t));
+    const k = Math.min(4, Math.floor(p * 5));
+    scenes.forEach((li, i) => li.classList.toggle('on', i === k));
+    sec.classList.toggle('k', p >= .6);
+    sec.style.setProperty('--sp', Math.min(1, p * 4));
+  };
+  return {build, render, sec};
+})();
+
+/* ---- Playable demo: dashboard edits drive the chat ---- */
+const demo = (() => {
+  const chat = $('#dChat'), chips = $('#dChips'), box = $('#dOrders'), pOut = $('#pOut'), fOut = $('#fOut');
+  const S = {price: 9, fee: 2.5, bacon: true, open: true, no: 125, order: null, cart: null};
+  let run = 0, started = false, timer = 0;
+  const alive0 = () => { const id = ++run; return () => id === run; };
+  const tx = () => fr() ? {
+    hello: p => `Bienvenue chez Burger House ! Aujourd'hui : <b>Cheeseburger ${p}</b>. Je vous en mets un ?`,
+    burger: p => `Cheeseburger ${p}`, size: 'Quelle taille ?', reg: 'Normal', lg: 'Grand',
+    extra: 'Avec du bacon ? (+1 €)', addBacon: 'Bacon +1 €', no: 'Non merci', out: 'Le bacon est épuisé aujourd\'hui. On continue sans ?', cont: 'Continuer',
+    fries: 'Des frites avec ça ? (+3 €)', addFries: 'Frites +3 €', how: 'Livraison ou retrait ?', del: f => `Livraison +${f}`, pick: 'Retrait',
+    sum: 'Récapitulatif', confirm: 'Confirmer', ok: (n, m) => `✓ Commande n°${n} confirmée. ${m}`, ready: 'Prête dans ~25 min.',
+    closed: 'Nous sommes fermés pour le moment. Réouverture demain à 11:00. À bientôt !', closedNote: 'Restaurant fermé',
+    reopen: 'Restaurant rouvert', baconOff: 'Bacon marqué épuisé', baconOn: 'Bacon de nouveau disponible', priceNote: (a, b) => `Menu mis à jour : Cheeseburger ${a} → ${b}`, feeNote: (a, b) => `Frais de livraison : ${a} → ${b}`,
+    empty: 'Confirmez une commande dans le chat : elle arrive ici.', next: s => `Passer à : ${s}`, again: 'Nouvelle commande', wait: 'Assistant en train d\'écrire…',
+    upd: ['', 'Votre commande est en préparation 🍳', 'Votre commande est prête !', 'Commande livrée. Merci et bon appétit !'],
+    large: 'Grand', regular: 'Normal', dLabel: 'Livraison', pLabel: 'Retrait', friesL: 'Frites'
+  } : {
+    hello: p => `Welcome to Burger House! Today: <b>Cheeseburger ${p}</b>. Shall I add one?`,
+    burger: p => `Cheeseburger ${p}`, size: 'Which size?', reg: 'Regular', lg: 'Large',
+    extra: 'Add bacon? (+€1)', addBacon: 'Bacon +€1', no: 'No thanks', out: 'Bacon is sold out today. Continue without it?', cont: 'Continue',
+    fries: 'Fries with that? (+€3)', addFries: 'Fries +€3', how: 'Delivery or pickup?', del: f => `Delivery +${f}`, pick: 'Pickup',
+    sum: 'Summary', confirm: 'Confirm', ok: (n, m) => `✓ Order #${n} confirmed. ${m}`, ready: 'Ready in ~25 min.',
+    closed: "We're closed right now. We reopen tomorrow at 11:00. See you soon!", closedNote: 'Restaurant closed',
+    reopen: 'Restaurant reopened', baconOff: 'Bacon marked sold out', baconOn: 'Bacon back in stock', priceNote: (a, b) => `Menu updated: Cheeseburger ${a} → ${b}`, feeNote: (a, b) => `Delivery fee: ${a} → ${b}`,
+    empty: 'Confirm an order in the chat and it lands here.', next: s => `Move to: ${s}`, again: 'New order', wait: 'Assistant is typing…',
+    upd: ['', 'Your order is being prepared 🍳', 'Your order is ready!', 'Order delivered. Thank you, enjoy your meal!'],
+    large: 'Large', regular: 'Regular', dLabel: 'Delivery', pLabel: 'Pickup', friesL: 'Fries'
+  };
+  const setChips = list => {
+    chips.innerHTML = '';
+    list.forEach(([label, fn]) => {
+      const b = document.createElement('button');
+      b.className = 'chip'; b.textContent = label;
+      b.onclick = () => { bubble(chat, 'out', label); fn(); };
+      chips.append(b);
+    });
+  };
+  const waiting = () => { chips.innerHTML = `<span class="wait">${tx().wait}</span>`; };
+  const say = async (html, then) => {
+    const alive = alive0();
+    waiting();
+    await botSay(chat, html, alive);
+    if (alive()) then();
+  };
+  const note = t => {
+    const el = document.createElement('div');
+    el.className = 'note'; el.textContent = t; chat.append(el); chat.scrollTop = chat.scrollHeight;
+  };
+  const total = c => S.price + (c.large ? 2 : 0) + (c.bacon ? 1 : 0) + (c.fries ? 3 : 0) + (c.delivery ? S.fee : 0);
+  const summary = c => {
+    const t = tx(), bits = [`1× ${c.large ? t.large : t.regular} Cheeseburger`];
+    if (c.bacon) bits.push('Bacon');
+    if (c.fries) bits.push(t.friesL);
+    bits.push(c.delivery ? t.dLabel : t.pLabel);
+    return bits.join(' · ');
+  };
+  const start = () => {
+    const t = tx();
+    S.cart = {};
+    if (!S.open) return say(t.closed, () => chips.innerHTML = '');
+    say(t.hello(eur(S.price)), () => setChips([[t.burger(eur(S.price)), askSize]]));
+  };
+  const askSize = () => {
+    const t = tx();
+    say(t.size, () => setChips([
+      [`${t.reg} ${eur(S.price)}`, () => askExtra(false)],
+      [`${t.lg} ${eur(S.price + 2)}`, () => askExtra(true)]
+    ]));
+  };
+  const askExtra = large => {
+    const t = tx(); S.cart.large = large;
+    if (!S.bacon) return say(t.out, () => setChips([[t.cont, askFries]]));
+    say(t.extra, () => setChips([
+      [t.addBacon, () => { S.cart.bacon = true; askFries(); }],
+      [t.no, askFries]
+    ]));
+  };
+  const askFries = () => {
+    const t = tx();
+    say(t.fries, () => setChips([
+      [t.addFries, () => { S.cart.fries = true; askHow(); }],
+      [t.no, askHow]
+    ]));
+  };
+  const askHow = () => {
+    const t = tx();
+    say(t.how, () => setChips([
+      [t.del(eur(S.fee)), () => { S.cart.delivery = true; askConfirm(); }],
+      [t.pick, askConfirm]
+    ]));
+  };
+  const askConfirm = () => {
+    const t = tx(), c = S.cart;
+    say(`<b>${t.sum}</b><br>${summary(c)}<br><b>Total ${eur(total(c))}</b>`, () => setChips([[t.confirm, () => place()]]));
+  };
+  const place = () => {
+    const t = tx(), c = S.cart;
+    S.order = {no: S.no++, cart: c, total: total(c), st: 0};
+    drawOrder(); reach(box);
+    say(t.ok(S.order.no, t.ready), () => setChips([[t.again, start]]));
+  };
+  const drawOrder = () => {
+    const t = tx(), o = S.order;
+    if (!o) { box.innerHTML = `<p class="oempty">${t.empty}</p>`; return; }
+    const s = STATUS[lang];
+    box.innerHTML = `<article class="oc"><header><span>#${o.no} · ${eur(o.total)}</span><span class="st st${o.st}">${s[o.st]}</span></header><p>${summary(o.cart)}</p>${o.st < 3 ? `<button class="btn btn-ink" id="oNext">${t.next(s[o.st + 1])}</button>` : ''}</article>`;
+    const b = $('#oNext');
+    if (b) b.onclick = () => {
+      o.st++; drawOrder(); reach(chat);
+      botSay(chat, tx().upd[o.st], () => true);
+    };
+  };
+  // On small screens the dashboard and the phone are stacked, so bring the result into view
+  const reach = el => { if (innerWidth <= 960) el.scrollIntoView({block: 'center', behavior: calm ? 'auto' : 'smooth'}); };
+  const changed = msg => {
+    started = true;
+    note(msg); reach(chat);
+    clearTimeout(timer); chips.innerHTML = ''; run++;
+    timer = setTimeout(start, calm ? 0 : 550);
+  };
+  const stepper = (key, out, lo, hi, msg) => d => {
+    const v = Math.min(hi, Math.max(lo, S[key] + d));
+    if (v === S[key]) return;
+    const old = S[key]; S[key] = v;
+    out.textContent = eur(v);
+    out.classList.remove('bump'); void out.offsetWidth; out.classList.add('bump');
+    changed(tx()[msg](eur(old), eur(v)));
+  };
+  const setPrice = stepper('price', pOut, 5, 20, 'priceNote'), setFee = stepper('fee', fOut, 0, 6, 'feeNote');
+  $('#pMinus').onclick = () => setPrice(-1);
+  $('#pPlus').onclick = () => setPrice(1);
+  $('#fMinus').onclick = () => setFee(-.5);
+  $('#fPlus').onclick = () => setFee(.5);
+  const sw = (id, key, on, off) => $(id).onclick = e => {
+    S[key] = !S[key];
+    e.currentTarget.setAttribute('aria-checked', S[key]);
+    changed(S[key] ? tx()[on] : tx()[off]);
+  };
+  sw('#swBacon', 'bacon', 'baconOn', 'baconOff');
+  sw('#swOpen', 'open', 'reopen', 'closedNote');
+  const restart = () => {
+    run++; chat.innerHTML = ''; chips.innerHTML = '';
+    pOut.textContent = eur(S.price); fOut.textContent = eur(S.fee); drawOrder();
+    if (started) start();
+  };
+  new IntersectionObserver((e, o) => {
+    if (!e[0].isIntersecting) return;
+    o.disconnect();
+    if (!started) { started = true; start(); }
+  }, {threshold: .25}).observe(chat);
+  return {restart};
+})();
+
+/* ---- Dashboard: tickets move along the rail ---- */
+const rail = (() => {
+  const el = $('#rail');
+  const pool = [
+    [124, 'Large Cheeseburger + Bacon, Fries', 'Grand Cheeseburger + Bacon, Frites', 'Sophie', 1, 17.5],
+    [123, '2× Margherita, Coke', '2× Margherita, Coca', 'Karim', 0, 24],
+    [122, 'Chicken Tacos XL', 'Tacos Poulet XL', 'Léa', 1, 13.5],
+    [121, 'Salmon Bowl, Water', 'Bowl Saumon, Eau', 'Marco', 0, 15.9],
+    [125, 'Double Burger, Shake', 'Double Burger, Milkshake', 'Inès', 1, 16.4],
+    [126, '4× Nuggets, Fries', '4× Nuggets, Frites', 'Tom', 0, 9.5]
+  ];
+  let cards = [{o: pool[0], c: 0}, {o: pool[1], c: 1}, {o: pool[2], c: 2}, {o: pool[3], c: 3}], next = 4, seen = true, moved = null;
+  const draw = () => {
+    el.innerHTML = STATUS[lang].map((name, i) => {
+      const list = cards.filter(k => k.c === i);
+      return `<div class="lane"><h4>${name}<span>${list.length}</span></h4>${list.map(k => `<div class="tk zig" data-n="${k.o[0]}"><b><span>#${k.o[0]}</span><span>${eur(k.o[5])}</span></b><span>${fr() ? k.o[2] : k.o[1]}</span><span>${k.o[3]} · ${(fr() ? ['Retrait', 'Livraison'] : ['Pickup', 'Delivery'])[k.o[4]]}</span></div>`).join('')}</div>`;
+    }).join('');
+    if (moved && !calm) {
+      const t = $(`[data-n="${moved}"]`, el);
+      if (t) t.animate([{opacity: 0, transform: 'translateY(-14px) rotate(-2deg)'}, {opacity: 1, transform: 'none'}], {duration: 420, easing: 'cubic-bezier(.2,.75,.2,1)'});
+    }
+  };
+  const tick = () => {
+    if (!seen || document.hidden) return;
+    const done = cards.filter(k => k.c === 3);
+    if (done.length > 1) cards = cards.filter(k => k !== done[0]);
+    const k = cards.find(k => k.c < 3);   // oldest open order moves on
+    if (k) { k.c++; moved = k.o[0]; }
+    if (!cards.some(k => k.c === 0)) {
+      const o = pool[next++ % pool.length];
+      if (!cards.some(k => k.o === o)) { cards.push({o, c: 0}); moved = o[0]; }
+    }
+    draw();
+  };
+  new IntersectionObserver(e => seen = e[0].isIntersecting).observe(el);
+  if (!calm) setInterval(tick, 2600);
+  return {draw};
+})();
+
+/* ---- Commission calculator ---- */
+const calc = (() => {
+  const o = $('#cO'), b = $('#cB'), c = $('#cC');
+  const fill = i => i.style.setProperty('--p', (i.value - i.min) / (i.max - i.min) * 100 + '%');
+  const up = () => {
+    [o, b, c].forEach(fill);
+    const fee = o.value * b.value * c.value / 100, keep = Math.max(0, (fee - 50) * 52), top = Math.max(fee, 50);
+    $('#cOo').textContent = o.value;
+    $('#cBo').textContent = eur0(+b.value);
+    $('#cCo').textContent = c.value + (fr() ? ' %' : '%');
+    $('#cA').textContent = eur0(fee);
+    $('#cR').textContent = eur0(50);
+    $('#cAb').style.width = fee / top * 100 + '%';
+    $('#cRb').style.width = 50 / top * 100 + '%';
+    $('#cS').textContent = eur0(keep);
+  };
+  [o, b, c].forEach(i => i.addEventListener('input', up));
+  return {up};
+})();
+
+/* ---- Scroll engine: everything tied to scroll position ---- */
+let lenis = null;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+function frame() {
+  const vh = innerHeight, y = scrollY;
+  $('#hdr').classList.toggle('on', y > 24);
+  $('#prog').style.transform = `scaleX(${y / Math.max(1, document.documentElement.scrollHeight - vh)})`;
+  $('.hero').style.setProperty('--hp', clamp(y / vh));
+  if (calm) return;
+  const sr = story.sec.getBoundingClientRect();
+  story.render(clamp(-sr.top / (sr.height - vh)));
+  const band = $('#band'), br = band.getBoundingClientRect();
+  band.style.setProperty('--c', (1 - clamp((vh * .55 - br.top) / (vh * 1.0))).toFixed(4));
+  const lit = $('#lit'), lr = lit.getBoundingClientRect(), ws = $$('.lw', lit);
+  const n = clamp((vh * .82 - lr.top) / (lr.height + vh * .3)) * ws.length;
+  ws.forEach((w, i) => w.classList.toggle('on', i < n));
+  const app = $('#app'), ar = app.getBoundingClientRect(), q = clamp((vh * 1.02 - ar.top) / (vh * .72));
+  app.style.transform = `rotateX(${(1 - q) * 22}deg) scale(${.9 + q * .1})`;
+}
+
+/* ---- Language ---- */
+const tr = $$('[data-fr]');
+const nodes = tr.map(el => ({el, en: el.innerHTML, fr: el.dataset.fr}));
+const META = {
+  en: ['RESTO PILOT AI — WhatsApp Ordering Assistant for Restaurants', "RESTO PILOT AI turns your restaurant's WhatsApp into a 24/7 AI ordering assistant. Live menu, cart, delivery, pickup and real-time orders. €50/week, no commitment."],
+  fr: ['RESTO PILOT AI — Assistant de commande WhatsApp pour restaurants', 'RESTO PILOT AI transforme le WhatsApp de votre restaurant en assistant de commande IA 24h/24. Menu en direct, panier, livraison, retrait et commandes en temps réel. 50 €/semaine, sans engagement.']
+};
+/* Headlines rise word by word; the manifesto lights up word by word */
+const wordWrap = (el, make) => {
+  let i = 0;
+  const walk = node => [...node.childNodes].forEach(n => {
+    if (n.nodeType === 1) return walk(n);
+    const frag = document.createDocumentFragment();
+    n.textContent.split(/(\s+)/).forEach(w => {
+      if (!w) return;
+      frag.append(/^\s+$/.test(w) ? document.createTextNode(' ') : make(w, i++));
+    });
+    n.replaceWith(frag);
+  });
+  walk(el);
+};
+function split() {
+  $$('h1[data-split], .head h2, .ai h2, .faq-h h2, .cta h2, .band-t h2').forEach(el => wordWrap(el, (w, i) => {
+    const o = document.createElement('span'), s = document.createElement('span');
+    o.className = 'sw'; s.textContent = w; s.style.setProperty('--i', i); o.append(s);
+    return o;
+  }));
+  wordWrap($('#lit'), w => { const s = document.createElement('span'); s.className = 'lw'; s.textContent = w; return s; });
+}
+function setLang(l, first) {
+  lang = l;
+  document.documentElement.lang = l;
+  nodes.forEach(n => n.el.innerHTML = n[l]);
+  $$('.lang button').forEach(b => { const on = b.dataset.l === l; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+  document.title = META[l][0];
+  $('meta[name=description]').content = META[l][1];
+  try { localStorage.setItem('rp_lang', l); } catch (e) {}
+  split(); story.build(); rail.draw(); calc.up(); demo.restart();
+  frame();
+}
+$$('.lang button').forEach(b => b.onclick = () => setLang(b.dataset.l));
+let start = 'en';
+try { start = localStorage.getItem('rp_lang') || ((navigator.language || '').toLowerCase().startsWith('fr') ? 'fr' : 'en'); } catch (e) {}
+setLang(start, true);
+
+/* ---- Header, mobile nav, FAQ, reveal ---- */
+const hdr = $('#hdr'), mnav = $('#mnav'), burger = $('#burger');
+const menu = open => {
+  mnav.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+  if (lenis) open ? lenis.stop() : lenis.start();
+};
+burger.onclick = () => menu(!mnav.classList.contains('open'));
+$$('a', mnav).forEach(a => a.addEventListener('click', () => menu(false)));
+addEventListener('keydown', e => { if (e.key === 'Escape' && mnav.classList.contains('open')) { menu(false); burger.focus(); } });
+matchMedia('(min-width:1181px)').addEventListener('change', e => e.matches && menu(false));
+
+$$('.q button').forEach(btn => btn.onclick = () => {
+  const q = btn.closest('.q'), open = q.classList.contains('open');
+  $$('.q.open').forEach(x => { x.classList.remove('open'); $('button', x).setAttribute('aria-expanded', false); });
+  if (!open) { q.classList.add('open'); btn.setAttribute('aria-expanded', true); }
+});
+
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); }
+}), {threshold: .08, rootMargin: '0px 0px -40px 0px'});
+$$('.rv').forEach(el => io.observe(el));
+$$('.week span').forEach((s, i) => s.firstElementChild.style.setProperty('--k', i));
+$$('.bars i').forEach((b, i) => b.style.setProperty('--k', i));
+
+/* Videos only play while on screen */
+const vio = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { if (!calm) e.target.play().catch(() => {}); } else e.target.pause();
+}), {rootMargin: '200px'});
+$$('video').forEach(v => { if (calm) v.removeAttribute('autoplay'); vio.observe(v); });
+
+/* Floating embers */
+function embers(c) {
+  if (calm) return;
+  const g = c.getContext('2d'), n = Math.round(+c.dataset.n * (innerWidth < 760 ? .5 : 1));
+  const dot = document.createElement('canvas'); dot.width = dot.height = 32;
+  const d = dot.getContext('2d'), rg = d.createRadialGradient(16, 16, 0, 16, 16, 16);
+  rg.addColorStop(0, 'rgba(255,236,200,1)'); rg.addColorStop(.25, 'rgba(255,160,70,.85)'); rg.addColorStop(1, 'rgba(255,80,20,0)');
+  d.fillStyle = rg; d.fillRect(0, 0, 32, 32);
+  let W, H, on = false, id = 0;
+  const size = () => { const s = Math.min(devicePixelRatio || 1, 1.5); W = c.clientWidth; H = c.clientHeight; c.width = W * s; c.height = H * s; g.setTransform(s, 0, 0, s, 0, 0); };
+  const seed = (p, any) => { p.x = Math.random() * W; p.y = any ? Math.random() * H : H + 20; p.r = 3 + Math.random() * 11; p.v = .25 + Math.random() * 1.1; p.w = Math.random() * 6.28; p.s = .4 + Math.random() * .9; p.a = .35 + Math.random() * .65; return p; };
+  size(); addEventListener('resize', size);
+  const ps = Array.from({length: n}, () => seed({}, true));
+  const draw = t => {
+    if (!on) return;
+    g.clearRect(0, 0, W, H); g.globalCompositeOperation = 'lighter';
+    for (const p of ps) {
+      p.y -= p.v; p.x += Math.sin(t / 900 * p.s + p.w) * .55;
+      if (p.y < -20) seed(p);
+      g.globalAlpha = p.a * Math.min(1, p.y / (H * .55)) * (.65 + .35 * Math.sin(t / 240 + p.w));
+      if (g.globalAlpha > .01) g.drawImage(dot, p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
+    }
+    id = requestAnimationFrame(draw);
+  };
+  new IntersectionObserver(e => { on = e[0].isIntersecting; cancelAnimationFrame(id); if (on) id = requestAnimationFrame(draw); }).observe(c);
+}
+$$('.embers').forEach(embers);
+
+/* Cursor light on cards, magnetic buttons */
+if (matchMedia('(hover:hover)').matches && !calm) {
+  $$('.bx,.led,.calc').forEach(el => el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', e.clientX - r.left + 'px'); el.style.setProperty('--my', e.clientY - r.top + 'px');
+  }));
+  $$('[data-mag]').forEach(b => {
+    b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * .18}px,${(e.clientY - r.top - r.height / 2) * .28}px)`; });
+    b.addEventListener('pointerleave', () => b.style.transform = '');
+  });
+}
+
+/* Smooth scrolling */
+if (window.Lenis && !calm) {
+  lenis = new Lenis({lerp: .1, wheelMultiplier: .95});
+  lenis.on('scroll', frame);
+  const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
+  document.documentElement.classList.add('lenis');
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'), t = id.length > 1 && document.querySelector(id);
+    if (!t) return;
+    e.preventDefault(); lenis.start();
+    lenis.scrollTo(t, {offset: id === '#top' ? 0 : -84, duration: 1.5});
+  }));
+}
+addEventListener('scroll', frame, {passive: true});
+addEventListener('resize', frame);
+frame();
+})();
+</script>
+</body>
+</html>
